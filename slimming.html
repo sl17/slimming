@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="wap-font-scale" content="no">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+  <style>
+
+    *{margin: 0;padding: 0;}
+    body{width: 100%;overflow: hidden;}
+    .content{padding: 15px;}
+    .header{display: flex;width: 100%;overflow-x: auto;height: 40px;;align-items: center;}
+    .header div{flex: 1;padding: 5px 10px;font-size: 14px;white-space: nowrap;}
+    .header div.col{background: #d7e4ff;font-weight: bold;color: #0062fb;border-radius: 4px;}
+    .slide .el-carousel__container{height: calc(100vh - 70px);}
+    .slide .food{}
+    .slide .date{margin-bottom: 10px;height: 26px;line-height: 26px;;}
+    .slide .date p{font-size: 20px;color: #0087ff;font-weight: bold;}
+    .slide .date span{float: right;}
+    .slide .food .box{display: flex;border-radius: 0 5px 5px 0;border: 1px solid #a9a9a9;margin-left: 33px;position: relative;margin-bottom:20px;padding: 5px 0;}
+    .slide .food .box.morning::before{content: '早餐';position: absolute;margin:auto;left: -32px;background: cornflowerblue;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;font-weight: 500;}
+    .slide .food .box.noon::before{content: '午餐';position: absolute;margin:auto;left: -32px;background: #a1de52;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box.add::before{content: '加餐';position: absolute;margin:auto;left: -32px;background: #9a64ed;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box.night::before{content: '晚餐';position: absolute;margin:auto;left: -32px;background: #edab64;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box .small{flex: 1;}
+    .slide .food .box .small div{text-align: center;padding: 0 8px;}
+    .slide .food .box.morning .small div i{color: cornflowerblue;}
+    .slide .food .box.noon .small div i{color: #a1de52;}
+    .slide .food .box.add .small div i{color: #9a64ed;}
+    .slide .food .box.night .small div i{color: #edab64;}
+    .slide .food .box .small p{font-size: 12px;height: 40px;display: flex;align-items: center;justify-content: center;white-space:pre}
+    .slide .food .box .small span{font-size: 14px;color: #f15001;}
+    .el-carousel__container .el-carousel__arrow{height: 100%;border-radius: 10px;background: transparent;}
+    .el-carousel__container .el-carousel__arrow--right{right: 0;color: transparent;}
+    .el-carousel__container .el-carousel__arrow--left{left: 0;color: transparent;}
+    .el-carousel__container .el-carousel__arrow:hover{background: transparent;}
+    input[type=button],button,input[type=submit]{-webkit-appearance: none;}
+    .toDay{font-size: 13px;text-align: right;color: #2b7370;margin: 10px 0 5px;}
+  </style>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- 引入组件库 -->
+</head>
+
+<body>
+  <div id="app">
+    <div class="content">
+      <div class="header">
+        <div v-for="(item,index) in 14" :class="['head'+index,TabIndex==index?'col':'']" :key="'h'+item" @click="changeCarouselTab(index)">Day {{item}}</div>
+      </div>
+      <p class="toDay"><span>{{toDate}}</span></p>
+      <div class="slide">
+        <el-carousel :interval="5000" ref="carousel" :autoplay="false" arrow="always" @change="changeCarousel">
+          <el-carousel-item v-for="item in cData" :key="item.id">
+            <div class="date"><p>Day {{item.id}}</p></div>
+            <div class="food">
+              <div class="box morning">
+                <div class="small" v-for="(rowZ,i) in item.morning" :key="'z'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+                <div class="box noon">
+                <div class="small" v-for="(rowZ,i) in item.noon" :key="'w'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="box add">
+                <div class="small" v-for="(rowZ,i) in item.add" :key="'a'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="box night">
+                <div class="small" v-for="(rowZ,i) in item.night" :key="'n'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        toDate:'',
+        TabIndex:0,
+        cData:[
+          {
+            id: 1,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 2,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'黑椒牛肉\n糙米饭',num:'120g',class: 'el-icon-ice-teac'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 3,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:'60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 4,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'杂粮糙米饭',num:'120g',class: 'el-icon-dish'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 5,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'香菇鸡肉\n糙米饭',num:'120g',class: 'el-icon-tableware'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 6,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 7,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 8,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'黑椒牛肉\n糙米饭',num:'120g',class: 'el-icon-ice-teac'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 9,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 10,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'杂粮糙米饭',num:'120g',class: 'el-icon-dish'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 11,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'香菇鸡肉\n糙米饭',num:'120g',class: 'el-icon-tableware'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 12,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 13,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 14,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+        ]
+      }
+    },
+    mounted() {
+      this.getTody()
+    },
+    methods: {
+      changeCarousel(e){
+        this.TabIndex = e;
+        let header = document.querySelector(".header");
+        let leftItem = document.querySelector(".head" + e);
+        header.scrollLeft = (leftItem.offsetLeft-header.clientWidth/2);
+      },
+      changeCarouselTab(index){
+        this.$refs.carousel.setActiveItem(index)
+      },
+      getTody(){
+        let date = new Date();
+        let year = date.getFullYear();
+        let week = date.getDay();
+        let month =
+          date.getMonth() + 1 > 9
+            ? date.getMonth() + 1
+            : "0" + date.getMonth() + 1;
+        let day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+        this.toDate = year + "-" + month + "-" + day+'   '+' 周'+week
+      },
+    }
+  })
+</script>
+
+</html>
