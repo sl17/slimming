@@ -16,9 +16,13 @@
     .slide .el-carousel__container{height: calc(100vh - 70px);}
     .slide .food{}
     .slide .date{margin-bottom: 10px;height: 26px;line-height: 26px;;}
-    .slide .date p{font-size: 20px;color: #0087ff;font-weight: bold;}
+    .slide .date p{font-size: 20px;color: #6ae0a5;font-weight: bold;}
     .slide .date span{float: right;}
     .slide .food .box{display: flex;border-radius: 0 5px 5px 0;border: 1px solid #a9a9a9;margin-left: 33px;position: relative;margin-bottom:20px;padding: 5px 0;}
+    .slide .food .box.morning{background: #e7f0ff;border: 1px solid cornflowerblue;}
+    .slide .food .box.noon{background: #f4ffe5;border: 1px solid #a1de52;}
+    .slide .food .box.add{background: #f4eeff;border: 1px solid #9a64ed;}
+    .slide .food .box.night{background: #fff7ef;border: 1px solid #edab64;}
     .slide .food .box.morning::before{content: '早餐';position: absolute;margin:auto;left: -32px;background: cornflowerblue;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;font-weight: 500;}
     .slide .food .box.noon::before{content: '午餐';position: absolute;margin:auto;left: -32px;background: #a1de52;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
     .slide .food .box.add::before{content: '加餐';position: absolute;margin:auto;left: -32px;background: #9a64ed;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
@@ -31,6 +35,7 @@
     .slide .food .box.night .small div i{color: #edab64;}
     .slide .food .box .small p{font-size: 12px;height: 40px;display: flex;align-items: center;justify-content: center;white-space:pre}
     .slide .food .box .small span{font-size: 14px;color: #f15001;}
+    .el-carousel__indicators--horizontal{display: none;}
     .el-carousel__container .el-carousel__arrow{height: 100%;border-radius: 10px;background: transparent;}
     .el-carousel__container .el-carousel__arrow--right{right: 0;color: transparent;}
     .el-carousel__container .el-carousel__arrow--left{left: 0;color: transparent;}
@@ -38,7 +43,7 @@
     input[type=button],button,input[type=submit]{-webkit-appearance: none;}
     .toDay{height: 20px;line-height: 20px;}
     .toDay span{font-size: 13px;color: #2b7370;float: right;}
-    .toDay div{color: tomato;font-size: 12px;float: left;font-weight: bold;}
+    .toDay div{color: #4fa287;font-size: 12px;float: left;font-weight: bold;}
     .win{width: 100%;height: 100vh;background-color: rgba(0,0,0,.7);position: fixed;left: 0;top: 0;z-index: 9999;}
     .win i{font-size: 30px;position: absolute;top: 12vh;right: 26px;color: #fff;}
     .win div{position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;width: 70%;height: 290px;overflow: hidden;overflow-y: auto;background: #fff;border-radius: 5px;padding: 20px 15px;}
