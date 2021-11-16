@@ -13,7 +13,7 @@
     .header{display: flex;width: 100%;overflow-x: auto;height: 40px;;align-items: center;}
     .header div{flex: 1;padding: 5px 10px;font-size: 14px;white-space: nowrap;}
     .header div.col{background: #d7e4ff;font-weight: bold;color: #0062fb;border-radius: 4px;}
-    .slide .el-carousel__container{height: calc(100vh - 70px);}
+    .slide .el-carousel__container{height: 480px;}
     .slide .food{}
     .slide .date{margin-bottom: 10px;height: 26px;line-height: 26px;;}
     .slide .date p{font-size: 20px;color: #6ae0a5;font-weight: bold;}
@@ -48,6 +48,12 @@
     .win i{font-size: 30px;position: absolute;top: 12vh;right: 26px;color: #fff;}
     .win div{position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;width: 70%;height: 290px;overflow: hidden;overflow-y: auto;background: #fff;border-radius: 5px;padding: 20px 15px;}
     .win div p{color: #333;font-size: 14px;line-height: 20px;margin-bottom: 10px;}
+
+    .content-view{width: 100%;height: 100vh;background-color: rgba(0,0,0,.7);position: fixed;left: 0;top: 0;z-index: 9999}
+    .content-view i{font-size: 30px;position: absolute;top: 12vh;right: 26px;color: #fff;}
+    .content-view div{position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;width: 80%;height: 330px;overflow: hidden;overflow-y: auto;background: #1944a3;border-radius: 5px;padding: 20px 0px;}
+    .content-view div img{width: 100%;font-size: 0;}
+    .viewContent{width: 115px;height: 36px;border-radius: 5px;margin: 20px auto;line-height: 36px;background-color: #1944a3;color: #fff;text-align: center;}
   </style>
   <!-- 引入样式 -->
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -117,6 +123,14 @@
           <p>3、每天喝八杯水，约1500-2000ml，可以饮用牛奶和豆浆，是减脂期间优质的液态蛋白补充，也可自行冲泡咖啡、绿茶或红茶，不加糖。</p>
         </div>
       </div>
+      <p  @click="isContent=true" class="viewContent">套餐内容</p>
+      <div class="content-view" v-if="isContent">
+        <i class="el-icon-circle-close" @click="isContent=false"></i>
+        <div>
+          <img src="../images/1.png" alt="">
+          <img src="../images/2.png" alt="">
+        </div>
+      </div>
     </div>
   </div>
 </body>
@@ -126,6 +140,7 @@
     data: function () {
       return {
         isView:false,
+        isContent:false,
         toDate:'',
         TabIndex:0,
         cData:[
