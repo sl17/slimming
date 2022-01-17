@@ -471,11 +471,11 @@
       getTody(){
         let date = new Date();
         let year = date.getFullYear();
-        let week = date.getDay();
+        let week = date.getDay()==0?'日':date.getDay();
         let month =
           date.getMonth() + 1 > 9
             ? date.getMonth() + 1
-            : "0" + date.getMonth() + 1;
+            : "0" + (date.getMonth() + 1);
         let day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
         this.toDate = year + "-" + month + "-" + day+'   '+' 周'+week
       },
