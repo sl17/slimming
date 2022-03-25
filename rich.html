@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rich</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		body{
+			padding: 10px;
+		}
+		.wrap{
+			margin: 50px auto ;
+			max-width: 320px;
+			overflow: hidden;
+		}
+		.wrap button {
+			float: left;
+			width: 49%;
+			height: 30px;
+			border-radius: 5px;
+			outline: none;
+			color: #fff;
+			border: none;
+			letter-spacing: 10px;
+			font-weight: bold;
+		}
+
+		.wrap button.red {
+			background-color: red;
+		}
+		.wrap button.red:active {
+			background-color: rgb(153, 16, 16);
+		}
+
+		.wrap button.blue {
+			margin-left: 2%;
+			background-color: rgb(17, 100, 226);
+		}
+		.wrap button.blue:active{
+			background-color: rgb(16, 58, 121);
+		}
+
+		.view p span {
+			display: inline-block;
+			color: #fff;
+			font-size: 14px;
+			width: 30px;
+			height: 30px;
+			border-radius: 20px;
+			text-align: center;
+			line-height: 30px;
+			vertical-align: middle;
+			margin: 0 5px;
+			box-shadow: 3px 4px 12px 0px rgba(0, 0, 0, 0.38);
+			user-select: none;
+			font-weight: bold;
+
+		}
+
+		#red span {
+			background-image: radial-gradient(closest-side at 34% 20%, rgba(255, 255, 255, 0.52) 1% 1%, red 44% 80%, rgb(122, 21, 21) 500%);
+		}
+
+		#blue span {
+			background-image: radial-gradient(closest-side at 34% 20%, rgba(255, 255, 255, 0.52) 1% 1%, rgb(0, 81, 255) 44% 80%, rgb(8, 29, 153) 500%);
+		}
+		.view{
+			text-align: center;
+		}
+		.view p {
+			display: inline-block;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="wrap">
+		<button class="red" onclick="funJixuan('hq')">随机红</button>
+		<button class="blue" onclick="funJixuan('lq')">随机蓝</button>
+	</div>
+	<div class="view">
+		<p id="red"></p>
+		<p id="blue"></p>
+	</div>
+	<script>
+		function randomNum(max, min) {
+			return parseInt(Math.random() * (max - min + 1) + min, 10)
+		};
+		function randomNums(len, arr) {
+			let temp = arr.concat();
+			let newArr = [];
+			for (let i = 0; i < len; i++) {
+				let e = temp.length - 1;//每次旧数据减 1
+				let d = randomNum(e, 0);//生成随机数
+				newArr.push(temp[d]);//随机数拿出来
+				temp.splice(d, 1)//并且在旧数组里删除
+			}
+			return newArr;
+		};
+		// 机选球
+		function funJixuan(val) {
+			let tmp = [];
+			let arr, len;
+			if (val == 'hq') {
+				len = 6
+				arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
+			} else {
+				len = 1
+				arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+			}
+			tmp = randomNums(len, arr);
+			tmp = tmp.sort(sortArr)
+			if (val == 'hq') {
+				let red = document.getElementById('red');
+				let redStr = ``
+				for (let index = 0; index < tmp.length; index++) {
+					redStr += `<span>${tmp[index]<10?'0'+tmp[index]:tmp[index]}</span>`
+				}
+				red.innerHTML = redStr;
+			} else {
+				let blue = document.getElementById('blue');
+				let blueStr = ``
+				for (let index = 0; index < tmp.length; index++) {
+					blueStr += `<span>${tmp[index]<10?'0'+tmp[index]:tmp[index]}</span>`
+				}
+				blue.innerHTML = blueStr;
+			}
+		};
+		function sortArr(a, b) {
+			return a - b
+		}
+
+	</script>
+</body>
+
+</html>
