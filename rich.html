@@ -7,15 +7,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Rich</title>
 	<style>
-		*{margin: 0;padding: 0;}
-		body{
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
 			padding: 10px;
 		}
-		.wrap{
-			margin: 50px auto ;
+
+		.wrap {
+			margin: 50px auto;
 			max-width: 320px;
 			overflow: hidden;
 		}
+
 		.wrap button {
 			float: left;
 			width: 30%;
@@ -31,6 +37,7 @@
 		.wrap button.red {
 			background-color: red;
 		}
+
 		.wrap button.red:active {
 			background-color: rgb(153, 16, 16);
 		}
@@ -39,7 +46,8 @@
 			margin-left: 2%;
 			background-color: rgb(17, 100, 226);
 		}
-		.wrap button.blue:active{
+
+		.wrap button.blue:active {
 			background-color: rgb(16, 58, 121);
 		}
 
@@ -67,16 +75,24 @@
 		#blue span {
 			background-image: radial-gradient(closest-side at 34% 20%, rgba(255, 255, 255, 0.52) 1% 1%, rgb(0, 81, 255) 44% 80%, rgb(8, 29, 153) 500%);
 		}
-		.view{
+
+		.view {
 			text-align: center;
 		}
+
 		.view p {
 			display: inline-block;
+		}
+
+		.date {
+			font-size: 14px;
+			text-align: right;
 		}
 	</style>
 </head>
 
 <body>
+	<p class="date"></p>
 	<div class="wrap">
 		<button class="red" onclick="funJixuan('hq')">随机红</button>
 		<button class="blue" onclick="funJixuan('lq')">随机蓝</button>
@@ -87,6 +103,20 @@
 		<p id="blue"></p>
 	</div>
 	<script>
+		getToday()
+		setInterval(() => {
+			getToday()
+
+		}, 1000)
+		function patch(s) {
+			return s < 10 ? '0' + s : s
+		}
+		function getToday() {
+			const date = new Date()
+			const resDate = date.getFullYear() + '-' + patch((date.getMonth() + 1)) + '-' + patch(date.getDate())
+			const resTime = patch(date.getHours()) + ':' + patch(date.getMinutes()) + ':' + patch(date.getSeconds())
+			document.querySelector('.date').innerHTML = resDate + ' ' + resTime;
+		}
 		function randomNum(max, min) {
 			return parseInt(Math.random() * (max - min + 1) + min, 10)
 		};
@@ -123,14 +153,14 @@
 				let red = document.getElementById('red');
 				let redStr = ``
 				for (let index = 0; index < tmp.length; index++) {
-					redStr += `<span>${tmp[index]<10?'0'+tmp[index]:tmp[index]}</span>`
+					redStr += `<span>${tmp[index] < 10 ? '0' + tmp[index] : tmp[index]}</span>`
 				}
 				red.innerHTML = redStr;
 			} else {
 				let blue = document.getElementById('blue');
 				let blueStr = ``
 				for (let index = 0; index < tmp.length; index++) {
-					blueStr += `<span>${tmp[index]<10?'0'+tmp[index]:tmp[index]}</span>`
+					blueStr += `<span>${tmp[index] < 10 ? '0' + tmp[index] : tmp[index]}</span>`
 				}
 				blue.innerHTML = blueStr;
 			}
