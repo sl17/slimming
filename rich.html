@@ -18,7 +18,7 @@
 		}
 		.wrap button {
 			float: left;
-			width: 49%;
+			width: 30%;
 			height: 30px;
 			border-radius: 5px;
 			outline: none;
@@ -80,6 +80,7 @@
 	<div class="wrap">
 		<button class="red" onclick="funJixuan('hq')">随机红</button>
 		<button class="blue" onclick="funJixuan('lq')">随机蓝</button>
+		<button class="origin" onclick="direct()">直接</button>
 	</div>
 	<div class="view">
 		<p id="red"></p>
@@ -89,6 +90,11 @@
 		function randomNum(max, min) {
 			return parseInt(Math.random() * (max - min + 1) + min, 10)
 		};
+		function direct() {
+			funJixuan('hq')
+			funJixuan('lq')
+		};
+
 		function randomNums(len, arr) {
 			let temp = arr.concat();
 			let newArr = [];
