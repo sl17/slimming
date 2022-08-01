@@ -2,379 +2,485 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="wap-font-scale" content="no">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
   <style>
-    *{margin: 0;padding: 0;}
-    body{height: 100vh;width: 100vw;;overflow: hidden;}
-    .text-list-wrap{width: 70vw;padding: 10px;overflow: hidden;overflow-y: auto;margin: 0 auto;}
-    .text-list-wrap p{margin: 5px 0;padding: 5px;border: 1px solid #ddd;}
-    .text-list-wrap p span{font-size: 12px;}
-    .audio-track-wrap{overflow: hidden;overflow-x: auto;width: 100vw;}
-    .audio-track-wrap div{margin: 2px;min-width: max-content;}
-    .audio-track-wrap div.col-1,.audio-track-wrap div.col-1 .name-wrap{background-color: #fff;}
-    .audio-track-wrap div.col0,.audio-track-wrap div.col0 .name-wrap{background-color: #93ff93;}
-    .audio-track-wrap div.col1,.audio-track-wrap div.col1 .name-wrap{background-color: #7fecff;}
-    .audio-track-wrap div.col2,.audio-track-wrap div.col2 .name-wrap{background-color: #91aeff;}
-    .audio-track-wrap div.col3,.audio-track-wrap div.col3 .name-wrap{background-color: #e69bff;}
-    .audio-track-wrap div.col4,.audio-track-wrap div.col4 .name-wrap{background-color: #fe8f8f;}
-    .audio-track-wrap div.col5,.audio-track-wrap div.col5 .name-wrap{background-color: #fff484;}
-    .audio-track-wrap div.col6,.audio-track-wrap div.col6 .name-wrap{background-color: #ffb062;}
-    .audio-track-wrap div.col7,.audio-track-wrap div.col7 .name-wrap{background-color: #ff6600;}
-    .audio-track-wrap div.col8,.audio-track-wrap div.col8 .name-wrap{background-color: #3fbc3f;}
-    .audio-track-wrap div.col9,.audio-track-wrap div.col9 .name-wrap{background-color: #5874c2;}
-    .audio-track-wrap div.col10,.audio-track-wrap div.col10 .name-wrap{background-color: #a757c2;}
-    .audio-track-wrap div.col11,.audio-track-wrap div.col11 .name-wrap{background-color: #00778b;}
-    .audio-track-wrap div.col12,.audio-track-wrap div.col12 .name-wrap{background-color: #083ed3;}
-    .audio-track-wrap div.col13,.audio-track-wrap div.col13 .name-wrap{background-color: #8404ae;}
-    .audio-track-wrap div.col14,.audio-track-wrap div.col14 .name-wrap{background-color: #bd0202;}
-    .audio-track-wrap div.col15,.audio-track-wrap div.col15 .name-wrap{background-color: #769008;}
-    .audio-track-wrap div.col16,.audio-track-wrap div.col16 .name-wrap{background-color: #904700;}
-    .audio-track-wrap div.col17,.audio-track-wrap div.col17 .name-wrap{background-color: #009009;}
-    .audio-track-wrap div p{display: table-cell;font-size: 0;text-align: center;}
-    .audio-track-wrap div p span{font-size: 12px;;display: inline-block;width: 40px;height: 30px;overflow: hidden;line-height: 30px;border-left: 1px solid #1111;}
-    .audio-track-wrap div p:last-child span{border-right: 1px solid #1111;}
-    .audio-track-wrap div p span.name,.audio-track-wrap div p span.name-bg{width: 150px;}
-    .audio-track-wrap div p.name-wrap{position: absolute;overflow: hidden;left: 0; box-shadow: 0 0px 0px 0  transparent ,1px 0 0 0 #fff, 0 0 0px 0 transparent, 0 0 0px 0 transparent;}
-    .audio-track-wrap div p.name-wrap i{position: absolute;top: 0;right:-82px;width: 180px;height: 14px;background-image: linear-gradient(to right, transparent 40% , rgba(255, 255, 255, 0.8), transparent 60%);font-weight: 400;font-size: 10px;color: #000;transform: rotate(45deg) scale(.8);font-style: normal;line-height: 15px;}
-    .audio-track-wrap div p.name-wrap-txt{user-select: none;cursor: pointer;}
-    .btn-oper{position: relative;width: 100vw;height: 0;}
-    .btn-oper p{user-select: none;;cursor: pointer;;width: 50px;height: 22px;line-height: 22px;font-size: 12px;border-radius: 0 0 5px 5px;border: 1px solid #ddd;text-align: center;border-top: none;}
-    .btn-oper p.toggle{position: absolute;top: 0;right: 60px;}
-    .btn-oper p.edit{position: absolute;top: 0;right: 5px;background-color: #083ed3;color: #fff;border-color: #083ed3;}
 
-    .textarea-wrap-bg{position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;background-color: rgba(0,0,0,.8);z-index: 9;}
-    .textarea-wrap-bg .textarea-wrap{width: 60vw;height: 70vh;background-color: #fff;border-radius: 5px;position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;padding: 24px;font-size: 0;}
-    .textarea-wrap-bg .textarea-wrap textarea{width: calc(60vw - 24px);height: calc(70vh - 58px);resize: none;font-size: 14px;font-family: "微软雅黑";padding: 5px 10px;line-height: 22px;outline: none;}
-    .textarea-wrap-bg .textarea-wrap .oper-btn{margin-top: 20px;overflow: hidden;}
-    .textarea-wrap-bg .textarea-wrap .oper-btn p{user-select: none;;cursor: pointer;;float: right;font-size: 14px;; width: 80px;height: 24px;text-align: center;line-height: 24px;border-radius: 5px;margin-left: 20px;}
-    .textarea-wrap-bg .textarea-wrap .oper-btn p.clear{border: 1px solid #083ed3;color: #083ed3;}
-    .textarea-wrap-bg .textarea-wrap .oper-btn p.check{border: 1px solid #083ed3;background-color: #083ed3;color: #fff;}
-    .data-none-wrap{cursor: pointer;user-select: none;;width: 50vw;letter-spacing: 5px;height: 50vh;text-align: center;line-height: 50vh;font-size: 50px;font-weight: 600;color: #ddd;border: 10px dashed #ddd;margin: 25vh auto;}
+    *{margin: 0;padding: 0;}
+    body{width: 100%;overflow: hidden;overflow-y: auto;}
+    .content{padding: 15px;}
+    .header{display: flex;width: 100%;overflow-x: auto;height: 40px;;align-items: center;}
+    .header div{flex: 1;padding: 5px 10px;font-size: 14px;white-space: nowrap;transition-duration: 0.5s;}
+    .header div.col{background: #d7e4ff;font-weight: bold;color: #0062fb;border-radius: 4px;}
+    .slide .el-carousel__container{height: 480px;}
+    .slide .food{}
+    .slide .date{margin-bottom: 10px;height: 26px;line-height: 26px;;}
+    .slide .date p{font-size: 20px;color: #6ae0a5;font-weight: bold;}
+    .slide .date span{float: right;}
+    .slide .food .box{display: flex;border-radius: 0 5px 5px 0;border: 1px solid #a9a9a9;margin-left: 33px;position: relative;margin-bottom:20px;padding: 5px 0;}
+    .slide .food .box.morning{background: #e7f0ff;border: 1px solid cornflowerblue;}
+    .slide .food .box.noon{background: #f4ffe5;border: 1px solid #a1de52;}
+    .slide .food .box.add{background: #f4eeff;border: 1px solid #9a64ed;}
+    .slide .food .box.night{background: #fff7ef;border: 1px solid #edab64;}
+    .slide .food .box.morning::before{content: '早餐';position: absolute;margin:auto;left: -32px;background: cornflowerblue;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;font-weight: 500;}
+    .slide .food .box.noon::before{content: '午餐';position: absolute;margin:auto;left: -32px;background: #a1de52;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box.add::before{content: '加餐';position: absolute;margin:auto;left: -32px;background: #9a64ed;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box.night::before{content: '晚餐';position: absolute;margin:auto;left: -32px;background: #edab64;color: #fff;top: -1px;bottom: -1px;display: flex;align-items: center;justify-content: center;font-size: 14px;padding: 0 10px;width: 12px;border-radius: 5px 0 0 5px;}
+    .slide .food .box .small{flex: 1;}
+    .slide .food .box .small div{text-align: center;padding: 0 8px;}
+    .slide .food .box.morning .small div i{color: cornflowerblue;}
+    .slide .food .box.noon .small div i{color: #a1de52;}
+    .slide .food .box.add .small div i{color: #9a64ed;}
+    .slide .food .box.night .small div i{color: #edab64;}
+    .slide .food .box .small p{font-size: 12px;height: 40px;display: flex;align-items: center;justify-content: center;white-space:pre}
+    .slide .food .box .small span{font-size: 14px;color: #f15001;}
+    .el-carousel__indicators--horizontal{display: none;}
+    .el-carousel__container .el-carousel__arrow{height: 100%;border-radius: 10px;background: transparent;}
+    .el-carousel__container .el-carousel__arrow--right{right: 0;color: transparent;}
+    .el-carousel__container .el-carousel__arrow--left{left: 0;color: transparent;}
+    .el-carousel__container .el-carousel__arrow:hover{background: transparent;}
+    input[type=button],button,input[type=submit]{-webkit-appearance: none;}
+    .toDay{height: 20px;line-height: 20px;}
+    .toDay span{font-size: 13px;color: #2b7370;float: right;}
+    .toDay div{color: #4fa287;font-size: 12px;float: left;font-weight: bold;}
+    .win{width: 100%;height: 100vh;background-color: rgba(0,0,0,.7);position: fixed;left: 0;top: 0;z-index: 9999;}
+    .win i{font-size: 30px;position: absolute;top: 12vh;right: 26px;color: #fff;}
+    .win div{position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;width: 70%;height: 290px;overflow: hidden;overflow-y: auto;background: #fff;border-radius: 5px;padding: 20px 15px;}
+    .win div p{color: #333;font-size: 14px;line-height: 20px;margin-bottom: 10px;}
+
+    .content-view{width: 100%;height: 100vh;background-color: rgba(0,0,0,.7);position: fixed;left: 0;top: 0;z-index: 9999}
+    .content-view i{font-size: 30px;position: absolute;top: 12vh;right: 26px;color: #fff;}
+    .content-view div{position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;width: 80%;height: 330px;overflow: hidden;overflow-y: auto;background: #1944a3;border-radius: 5px;padding: 20px 0px;}
+    .content-view div img{width: 100%;font-size: 0;}
+    .viewContent{width: 115px;height: 36px;border-radius: 5px;margin: 20px auto;line-height: 36px;background-color: #1944a3;color: #fff;text-align: center;}
   </style>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <script src="./js/vue@2.6.14.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- 引入组件库 -->
 </head>
+
 <body>
   <div id="app">
-    <div class="textarea-wrap-bg" v-if="editTxt">
-      <div class="textarea-wrap">
-        <textarea v-model="txtStr" placeholder="请在此粘贴文本" cols="30" rows="10"></textarea>
-        <div class="oper-btn">
-          <p class="check" @click="analyze">确定</p>
-          <p class="clear" @click="clear">取消</p>
+    <div class="content">
+      <div class="header">
+        <div v-for="(item,index) in 14" :class="['head'+index,TabIndex==index?'col':'']" :key="'h'+item" @click="changeCarouselTab(index)">Day {{item}}</div>
+      </div>
+      <div class="toDay"><div @click="isView=true">Tips:小贴士</div><span>{{toDate}}</span></div>
+      <div class="slide">
+        <el-carousel :interval="5000" ref="carousel" :autoplay="false" arrow="always" @change="changeCarousel">
+          <el-carousel-item v-for="item in cData" :key="item.id">
+            <div class="date"><p>Day {{item.id}}</p></div>
+            <div class="food">
+              <div class="box morning">
+                <div class="small" v-for="(rowZ,i) in item.morning" :key="'z'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+                <div class="box noon">
+                <div class="small" v-for="(rowZ,i) in item.noon" :key="'w'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="box add">
+                <div class="small" v-for="(rowZ,i) in item.add" :key="'a'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="box night">
+                <div class="small" v-for="(rowZ,i) in item.night" :key="'n'+i">
+                  <div>
+                    <i :class="rowZ.class"></i>
+                    <p>{{rowZ.name}}</p>
+                    <span>{{rowZ.num}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div class="win" v-if="isView">
+        <i class="el-icon-circle-close" @click="isView=false"></i>
+        <div>
+          <p>1、在食用期间有饥饿感，可自行添加蔬菜，推荐：黄瓜、小番茄，如能烹饪，也推荐各种叶类青菜,如西蓝花、花椰菜、冬瓜、海带；水果推荐各类浆果及樱桃、奇异果、桃子、柚子等非热带水果。</p>
+          <p>2、如出现便秘现象，通常是由于饮食结构发生变化导致，可以适当补充益生菌来调节肠道菌群。如遇平台期，可以补充膳食纤维，维生素和矿物质。</p>
+          <p>3、每天喝八杯水，约1500-2000ml，可以饮用牛奶和豆浆，是减脂期间优质的液态蛋白补充，也可自行冲泡咖啡、绿茶或红茶，不加糖。</p>
+        </div>
+      </div>
+      <p  @click="isContent=true" class="viewContent">套餐内容</p>
+      <div class="content-view" v-if="isContent">
+        <i class="el-icon-circle-close" @click="isContent=false"></i>
+        <div>
+          <img src="./images/1.png?v=1" alt="">
+          <img src="./images/2.png?v=1" alt="">
         </div>
       </div>
     </div>
-    <template v-if="txtStr">
-      <div class="audio-track-wrap" @mouseenter="enter" @mouseleave="leave" ref="audioWrap" v-if="expand">
-        <div v-for="(item,i) in audioTrack" :class="'col'+((i-1)%18)" :key="'t'+i">
-          <p class="name-wrap" :title="item.name"><span class="name">{{item.name}}</span><i>{{item.worNnumber}}</i></p>
-          <p class="name-wrap-bg"><span class="name-bg"></span></p>
-          <p v-for="(sitem,j) in item.list" :key="'st'+j" :class="{'name-wrap-txt':sitem.part}" @click="scolltopTxt('role'+i+'_'+sitem.part)" :title="sitem.value"><span>{{sitem.part}}</span></p>
-        </div>
-      </div>
-      <div class="btn-oper"><p @click="toggle" class="toggle">{{expandStr}}</p><p class="edit" @click="edit">编辑</p></div>
-      <div class="text-list-wrap" :style=" expand?'height:calc(100vh - '+audioHeight+'px)':'height:calc(100vh - 21px)'">
-        <p v-for="(item,i) in txtList" :key="'t'+i" :style="'background:'+item.color" :id="item.role+'_'+item.num"><span v-if="item.num">[{{item.num}}/{{totalNum[(item.role.substring(4)-1)]}}]</span>{{item.str}}</p>
-      </div>
-  </template>
-  <template v-else>
-    <div class="data-none-wrap" @click="edit">
-      请先输入文本再开始~
-    </div>
-  </template>
-
   </div>
-  <script>
-    new Vue({
-      el:"#app",
-      data:function(){
-        return {
-          txtStr:`青年摔在地上，满脸痛苦之色，嘴里往外吐血。
-【陈云-欧阳小白】“说吧，是谁让你们来的，交代清楚就可以活命！”陈云面无表情的说道。
-【龙套1-十一月的火焰】“是。。。。。。是我们老大派我们来的！”
-这青年哪还有半点嚣张？此刻怕得要死，直接就老实交代了。（揪领子或者脚踩）
-【陈云-欧阳小白】“你们老大是谁？”陈云继续问道。
-【龙套1-十一月的火焰】“是周建龙！是周建龙派我们来请这位小姐的，他还交代我们，要是这位陆小姐拒绝的话，就让我们强行带走，出了事情他来负责。”
-青年一五一十的说道。
-陈云微微皱眉，露出几分思索之色。
-周建龙是什么人？他不曾听过，但敢如此嚣张，应该是这南都之中颇有身份的人。
-这背后，十有八九有着阴谋。
-【陈云-欧阳小白】“带我去会会你们老大。”
-陈云嘴角泛起一丝弧度。
-将陆婉晴安抚好之后，陈云便拎着（音效）那青年下了楼。（下楼声）
-黄金宾利正停在路边，银豹和火凤也站在一旁，见到陈云后立马行礼。
-【银豹-冬天里的一把串】“主人！”
-【陈云-欧阳小白】“调查的如何？”陈云开口问道。
-【火凤-以权相倾】“已经弄清楚了周建龙的所在，今天周建龙在大办宴席，邀请了不少人来庆祝他突破宗师境。”火凤立即说道。
-【陈云-欧阳小白】“宗师境？”
-陈云冷冷一笑：【陈云-欧阳小白】“既然如此，那咱们也不能空着手去，先为他挑一份大礼吧。”
-【火凤-以权相倾】“是！”
-【银豹-冬天里的一把串】“是”
-银豹和火凤重重点头。
-随即，一行人钻入车内，黄金宾利启动（汽车发动的声音），扬长而去。
-。。。。。。（转场）（背景音为大摆宴席）
-南都市区，周家豪宅。
-周建龙突破宗师境，在南都也是不小的新闻。
-更何况周建龙才不过二十多岁的年纪，就已经有了如此造诣，未来成就不可限量。
-整个周家，张灯结彩，大摆宴席。
-周家来了不少有头有脸的人物，都是来庆贺周建龙突破宗师境。
-【龙套1-十一月的火焰】“万龙集团 总裁送来真宝玉如意一对！”
-【龙套2-淀晨】“浩方集团董事长送来玛莎拉蒂一辆！”
-【龙套3-一个大老王】“许家家主送来现今八百八十八万！”
-。。。。。。
-大门口，佣人们迎接着前来的贵客，一边大声通报着宾客们送上的贺礼。
-而在正前方的圆桌上，坐着一个黑衣青年。
-这黑衣青年留着一个村头，面容冷峻，一双眼睛格外锐利有神。
-正是周建龙！
-说话的正是许家家主，双手端着酒杯，一脸热情笑容。
-【周建龙-一个大老王】“哈哈，借许家主吉言了！”（碰杯声，喝酒）
-周建龙笑了一声，脸上狂傲之色不减。
-看得出来，此人绝对是一个心高气傲之辈。
-随着许家主敬酒后，其他众人也是纷纷敬酒，周建龙来者不拒，不断举杯。
-【老者专用-冬天里的一把串】“不知周少可有心仪的女子？在下的孙女刚刚十八，要是周少不介意的话，在下可以自作主张，让我孙女嫁给周少当个妾室。”（起身的音效）
-这时，一位老者起身笑道。
-【周建龙-一个大老王】“女人嘛，本少还真对一个女人颇感兴趣。”周建龙忽然冷笑。
-【老者专用-冬天里的一把串】“哦？是什么样的女人这么幸运？能得到周少垂青？”老者疑惑道。
-【周建龙-一个大老王】“东江陆家的大小姐，陆婉晴！”
-周建龙说着，眼中也是露出了贪婪之色。
-自从他收到聂云豹送来陆婉晴的照片后，就一直都陆婉晴念念不忘。
-在周建龙眼里，他已经是要定了陆婉晴，而且更认为，以自己的身份地位，这陆婉晴绝对会巴结自己。
-此言一出，周围众人却是楞了一下。
-【龙套3-一个大老王】“周少啊，据说那陆婉晴已经结婚了，而且。。。。。。那陆家赘婿也不是寻常之辈呀。”
-有人开口说道。
-【周建龙-一个大老王】“呵呵，对本少来说，区区一个蝼蚁而已，本少一根手指就可以将其碾死！”
-周建龙一脸不屑，言语之间尽是狂傲。（脚步声，由远及近，大理石地板）
-【陈云-欧阳小白】“哦？你说谁是蝼蚁？”
-就在这时，一道冰冷声音从院门外传来。
-声音冰冷，但极为洪亮，好似闷雷一样突然炸响。（突然站起的音效）
-【周建龙-一个大老王】“什么人？”周建龙双眉倒竖，腾地一下站起身来。
-【陈云-欧阳小白】“东江陈云，为周少送来贺礼！”（钟撞击桌面的声音，盘子酒杯摔碎的声音）
-呼啸之间，一口大钟竟然是从外面飞了进来，直接撞在了桌上，顿时将桌子撞得四分五裂，盘子酒杯砸了一地。（三个人的脚步）
-三道身影，随后迈步而入，正是陈云三人。
-如此一幕，使得在场众人面色大变。
-今天可是周建龙的庆贺之日，居然有人来送钟，这简直就是故意找事啊。
-周建龙神情变得狰狞起来，一丝丝恐怖气息缭绕在他的周身。
-【龙套1-十一月的火焰】“小子，你是什么人？敢挑衅周少，我看你是活的不耐烦了！”
-这时，一个大汉站起身来，指着陈云大吼道。
-【陈云-欧阳小白】“你还没资格与我说话。”
-陈云冷冷道。
-【龙套1-十一月的火焰】“我靠！你他妈的。。。。。。。”
-砰！（重重摔倒的声音）
-一道闷响，那壮汉都不知道发生了什么，刚想开口，就觉得喉咙一阵剧痛，随即一下子瘫倒在地。
-他的喉咙，竟然是被一根筷子给洞穿了。
-滴滴鲜血，顺着筷子滑落。
-众人顿时大惊失色。
-尤其是其他几个想在周建龙面前表现一下的人，更是缩了缩脖子，庆幸自己没有急着说话。
-【周建龙-一个大老王】“小子，我周建龙和你无冤无仇，你上门挑衅，未免太不把我放在眼里了！”
-周建龙语气森然的说道。
-【陈云-欧阳小白】“无冤无仇？你不是派了手下去抓我的女人吗？”陈云淡淡说道。
-【周建龙-一个大老王】“哦？原来你就是那陆家赘婿？”
-周建龙一怔，随即脸上满是轻蔑冷笑。
-【周建龙-一个大老王】“一个废物，有什么资格娶到那么漂亮的女人？简直是浪费，她能被本少看中，是她的荣幸，更是你的荣幸！”
-周建龙一脸的傲然。
-【周建龙-一个大老王】“现在，我给你两个选择，乖乖把女人送给我，再给我磕三个响头，本少就放过你。”
-【周建龙-一个大老王】“不然的话，可不就是磕头那么简单了！”
-陈云摇了摇头。
-【陈云-欧阳小白】“太麻烦了。”
-周建龙一怔：【周建龙-一个大老王】“你说什么？”
-【陈云-欧阳小白】“我说，太麻烦了，直接杀了你就行了。”
-陈云一脸淡然的说道，就像是在说一件微不足道的事情。
-但说出来的话，却是让整个院子都处在一股阴寒之中。
-【周建龙-一个大老王】“好你个不知死活的陆家赘婿，本少给你一条活路，你却不知进退，那就给我去死吧！”
-周建龙爆喝一声，整个人气势爆发，好似离弦之箭一般冲向了陈云。
-只见周建龙手握成拳，如同一颗炮弹，刹那间便是到了陈云的身前。
-拳风凌厉，呼呼作响。
-陈云却是不退反进，一步上前。
-顷刻间。
-轰！！！
-一声巨响，只见周建龙的拳头停顿在了半空，被陈云一把抓住。
-【周建龙-一个大老王】“这。。。。。。怎么可能？”
-周建龙一脸震惊。
-这一拳，他几乎用了九成的力道，威力可想而知。
-可对陈云来说，却是连挠痒痒都算不上。
-【周建龙-一个大老王】“不对劲！”
-周建龙低喝一声，想要挣脱开陈云的手掌向后退去。
-可无论他如何挣扎，陈云的手掌却好似铁钳一样，让他根本无法动弹。
-【陈云-欧阳小白】“就这？”
-陈云一脸轻蔑，手掌微微发力，顿时周建龙脸色剧变。
-轰隆！！！
-下一刻，周建龙整个身子被陈云重重的砸在了地上，将地面砸得四分五裂。
-而这，仅仅只是开始。
-陈云手臂一抖，周建龙整个人又飞了起来，然后再度砸在了地上。
-轰轰轰轰轰！！！
-一时间，院内接连响起了沉闷撞击声。
-地面被砸出了一个深坑，四分五裂，满是裂痕。
-直到砸了四五十下后，陈云才松开了手。
-再看那周建龙，整个人趴在深坑之中，浑身是血，狼狈不堪，半点没有之前嚣张的姿态，就如同一只死狗。
-在场众人全都看傻了。
-已经是宗师境高手的周建龙，在陈云手中竟然都没有半点的还手之力，被打得如此凄惨。
-这简直就是一场纯粹的碾压。
-一时间，众人看向陈云的眼神都变了，一个个都是流露出了惊惧之色。
-整个大院，无人敢发出声音，十分压抑。
-【陈云-欧阳小白】“交代吧，是谁让你派人抓陆婉晴的？”
-陈云站在深坑边上，双手负后，居高临下的看着周建龙。
-虽然说这个周建龙好色，但陆婉晴这才刚到南都，不可能这么快就被周建龙给盯上。
-这里面，必然还有其他原因。
-【周建龙-一个大老王】“我。。。。。。我说了，你可以饶我一命吗？”周建龙艰难的从口中吐出一句话来。
-【陈云-欧阳小白】“你没有资格和我讨价还价！”陈云淡淡说道。
-【周建龙-一个大老王】“是。。。。。。是聂家！”
-在陈云的威慑之下，周建龙还是妥协了，将聂家供了出来。
-听到这话，陈云眼睛微微一眯。`,
-          roleList:[],//角色列表
-          txtList:[],//文本列表
-          audioTrack:[],
-          colorList:['#93ff93','#7fecff','#91aeff','#e69bff','#fe8f8f','#fff484','#ffb062','#ff6600','#3fbc3f','#5874c2','#a757c2','#00778b','#083ed3','#8404ae','#bd0202','#769008','#904700','#009009'],
-          expand: true,
-          expandStr:'收起',
-          audioHeight: 0,
-          editTxt: true,
-          totalNum:{},//每个角色总共有多少条台词
-          scollLeftNum:0, // 音轨滚动的距离
-        }
-      },
-      methods:{
-        // 鼠标移入音轨区域 可以执行滚轮控制音轨左右移动
-        enter(e){
-          this.$refs.audioWrap.addEventListener('mousewheel', this.handleScroll, true); 
-        },
-        // 鼠标移出音轨区域 不能控制音轨左右移动
-        leave(){
-          this.$refs.audioWrap.removeEventListener('mousewheel', this.handleScroll); 
-        },
-        // 鼠标在音轨可以使用滚轮控制左右滑动
-        handleScroll(e){
-          let ev = e || window.event;
-          let multiple = 0;//滚动条移动的速度是滚轮的几倍
-          let totalWidth = document.querySelector('.col-1').clientWidth;
-          let winWidth = document.body.clientWidth;
-          multiple = (totalWidth - winWidth)/20;
-          if (ev.wheelDelta > 0) { //当滑轮向上滚动时 
-            this.scollLeftNum-- ;
-            if(this.scollLeftNum<=0){this.scollLeftNum = 0}
-          }
-          if (ev.wheelDelta < 0) { //当滑轮向下滚动时  
-            this.scollLeftNum++;
-          }
-          let width = this.$refs.audioWrap.clientWidth;
-          this.$refs.audioWrap.scrollLeft  = this.scollLeftNum*multiple ;
-        },
-        // 点击音轨里的文本 下面的画本对应文本自动滚动到顶部
-        scolltopTxt(even){
-          let role = document.getElementById(even);
-          if(role){
-            let DOMoffsetTop = role.offsetTop;
-            let textWrap = document.querySelector('.text-list-wrap');
-            let panentOffsetTop = textWrap.offsetTop;
-            textWrap.scrollTop = DOMoffsetTop-panentOffsetTop;
-          }
-        },
-        toggle(){
-          this.expand = !this.expand;
-          this.expandStr = this.expand?'收起':'展开'
-        },
-        // 区分角色
-        distinguishRole(str) {
-          let item = str.trim()
-          let last = item.substring(item.indexOf('”') + 1) ? item.substring(item.indexOf('”') + 1) : undefined;
-          if (last && (last.includes('【'))) {
-            return [item.substring(item.indexOf('【'), (item.indexOf('”') + 1))].concat((this.distinguishRole(last).flat()));
-          } else {
-            if(item.indexOf('【')!=0){
-              return [item.substring(0,item.indexOf('【')),item.substring(item.indexOf('【'), (item.indexOf('”') + 1)), last]
-            }else{
-              return [item.substring(item.indexOf('【'), (item.indexOf('”') + 1)), last];
-            }
-          }
-		    },
-        // 分析文本
-        analyze(){
-          let roleListSet = new Set();
-          let arr = this.txtStr.split('\n')
-            .map(item=>{
-              if(item.includes('【')){
-                roleListSet.add(item.substring(item.indexOf('【')+1,(item.indexOf('】'))));
-                return this.distinguishRole(item);
-              }else{
-                return item&&item.trim();
-              }
-            })
-          this.roleList = Array.from(roleListSet);
-          let txtArr = (arr.flat()).filter(item=>item);
-          let numArr = [];
-          let nobj = {};
-          txtArr.map(titem=>{
-            let obj = {str:'',color:'',num:0,role:''};
-            this.roleList.map((item,i)=>{
-              obj.str = titem;
-              if(titem.includes(item)){
-                obj.color = this.colorList[i];
-                obj.role = 'role'+(i+1);
-                numArr.push(i);
-                nobj = numArr.reduce((sobj,name)=>{
-                  if(name in sobj){sobj[name]++;}
-                  else{sobj[name]=1;};
-                  obj.num = sobj[name];
-                  return sobj;
-                },{});
-              }
-            });
-            this.txtList.push(obj);
-          })
-          this.totalNum = nobj;
-          this.roleList.unshift('旁白');
-          this.setAudioTrack();
-        },
-        // 封装音轨
-        setAudioTrack(){
-          let arr = [];
-          this.roleList.map((item,i)=>{
-            let obj = {name: item,list:[],worNnumber:0};
-            let part = 0;
-            this.txtList.map(sItem=>{
-              if(sItem){
-                if(i==0){
-                  if(sItem.str.includes('【')){
-                    obj.list.push('');
-                  }else{
-                    part++;
-                    obj.list.push({value:sItem.str,part:part});
-                    obj.worNnumber = part;
-                  }
-                }else{
-                  if(sItem.str.includes('【')){
-                    if(sItem.str.includes(item)){
-                      part++;
-                      obj.list.push({value:sItem.str,part:part});
-                      obj.worNnumber = part;
-                    }else{
-                      obj.list.push('');
-                    }
-                  }else{
-                    obj.list.push('');
-                  }
-                }
-              }
-            })
-            arr.push(obj);
-          })
-          this.audioTrack = arr;
-          this.$nextTick(()=>{
-            this.audioHeight = this.$refs.audioWrap&&this.$refs.audioWrap.clientHeight+37;
-          })
-          this.editTxt = false;
-        },
-        clear(){
-          this.editTxt = false;
-          this.txtStr = '';
-        },
-        edit(){
-          this.editTxt = true;
-          this.txtStr = '';
-        },
-      }
-    })
-  </script>
 </body>
+<script>
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        isView:false,
+        isContent:false,
+        toDate:'',
+        TabIndex:0,
+        cData:[
+          {
+            id: 1,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 2,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'黑椒牛肉\n糙米饭',num:'120g',class: 'el-icon-ice-teac'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 3,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:'60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 4,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'杂粮糙米饭',num:'120g',class: 'el-icon-dish'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 5,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'香菇鸡肉\n糙米饭',num:'120g',class: 'el-icon-tableware'},
+              {name:'鸡胸肉',num:'100g',class: 'el-icon-dish-1'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 6,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 7,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 8,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'黑椒牛肉\n糙米饭',num:'120g',class: 'el-icon-ice-teac'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 9,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 10,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'鸡蛋',num:'1个',class: 'el-icon-partly-cloudy'},
+            ],
+            noon:[
+              {name:'杂粮糙米饭',num:'120g',class: 'el-icon-dish'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'即食魔芋面',num:'300g',class: 'el-icon-food'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 11,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'香菇鸡肉\n糙米饭',num:'120g',class: 'el-icon-tableware'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 12,
+            morning:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 13,
+            morning:[
+              {name:'乳清威化\n蛋白棒',num:'30g',class: 'el-icon-ice-cream-square'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+              {name:'无糖豆浆',num:'1杯',class: 'el-icon-hot-water'},
+            ],
+            noon:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'高蛋白\nQQ鸡肉条',num:'25g',class: 'el-icon-sugar'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+          {
+            id: 14,
+            morning:[
+              {name:'魔芋紫薯\n代餐粥',num:'50g',class: 'el-icon-water-cup'},
+              {name:'全麦吐司面包',num:'50g',class: 'el-icon-potato-strips'},
+              {name:'牛奶/羊奶',num:'200ml',class: 'el-icon-coffee'},
+            ],
+            noon:[
+              {name:'高蛋白\nQQ鸡胸肉丸',num:'25g',class: 'el-icon-ice-cream'},
+              {name:'高蛋白\n口袋鸡胸肉',num:'20g',class: 'el-icon-pear'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+            add:[
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+              {name:'水果',num:'200g',class: 'el-icon-grape'},
+            ],
+            night:[
+              {name:'低脂荞麦泡食面\n迷你缤纷沙拉汁',num:' 60g/25g',class: 'el-icon-cold-drink'},
+              {name:'高蛋白\n玉米鸡肉肠',num:'25g',class: 'el-icon-chicken'},
+              {name:'黄瓜/小番茄\n等蔬菜',num:'200g',class: 'el-icon-apple'},
+            ],
+          },
+        ]
+      }
+    },
+    mounted() {
+      this.getTody()
+    },
+    methods: {
+      changeCarousel(e){
+        this.TabIndex = e;
+        let header = document.querySelector(".header");
+        let leftItem = document.querySelector(".head" + e);
+        header.scrollLeft = (leftItem.offsetLeft-header.clientWidth/2);
+      },
+      changeCarouselTab(index){
+        this.$refs.carousel.setActiveItem(index)
+      },
+      getTody(){
+        let date = new Date();
+        let year = date.getFullYear();
+        let week = date.getDay()==0?'日':date.getDay();
+        let month =
+          date.getMonth() + 1 > 9
+            ? date.getMonth() + 1
+            : "0" + (date.getMonth() + 1);
+        let day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+        this.toDate = year + "-" + month + "-" + day+'   '+' 周'+week
+      },
+    }
+  })
+</script>
+
 </html>
