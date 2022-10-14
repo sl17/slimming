@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		html,body{overflow: hidden;width: 100%;height: 100%;}
+		.el_table{width: 100%;border: 1px solid rgb(3, 82, 134);cursor: default;border-top: none;box-sizing: border-box;}
+		.el_table .el_head{display: flex;}
+		.el_table .el_head .el_th{flex: 1;height: 40px;line-height: 40px;background-color: rgb(3, 82, 134);color: #fff;box-sizing: border-box;padding-left: 10px;}
+		.el_table .el_head .el_th:not(:first-child){border-left: 1px solid #fff;}
+		.el_table .el_body .el_tr{display: flex;}
+		.el_table .el_body .el_tr:not(:last-child){border-bottom: 1px solid rgb(3, 82, 134);}
+		.el_table .el_body .el_tr .el_td{flex: 1;padding: 8px 10px;}
+		.el_table .el_body .el_tr .el_td:nth-child(odd){background-color: #cce8ff;}
+		.el_table .el_body .el_tr .el_td:nth-child(even){background-color: #a1cef9;}
+		.el_table .el_body .el_tr .el_td p:not(:last-child){padding-bottom: 3px;}
+		.el_table .el_body .el_tr .el_td p.pointer{cursor: pointer;}
+		.subprocess-wrap{position: relative;}
+		.close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
+		.close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
+		@media screen and (max-width: 1000px) {
+			.el_table{font-size: 14px;}
+		}
+		@media screen and (max-width: 750px) {
+			.el_table{font-size: 12px;}
+			.el_table .el_head .el_th{padding-left: 3px;height: 30px;line-height: 30px;}
+			.wrap .el_table .el_head .el_th:nth-child(1){flex: 0 0 36px}
+			.el_table .el_body .el_tr .el_td{padding: 3px;}
+			.wrap .el_table .el_body .el_tr .el_td:nth-child(1){flex: 0 0 30px}
+			.el_table .el_body .el_tr .el_td p:not(:last-child){border-bottom: 1px dashed #fff;}
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="wrap">
+			<div class="el_table">
+				<div class="el_head">
+					<div class="el_th"></div>
+					<div class="el_th">启动</div>
+					<div class="el_th">规划</div>
+					<div class="el_th">执行</div>
+					<div class="el_th">监控</div>
+					<div class="el_th">收尾</div>
+				</div>
+				<div class="el_body">
+					<div class="el_tr" v-for="(item,index) in list5a10" :key="'tr'+index">
+						<div class="el_td"><p class="pointer" @click="showAllSubprocess(item)">{{item.name}}</p></div>
+						<div class="el_td"><p @click="showSubprocess(item.start)" class="pointer">{{item.start.name}}</p></div>
+						<div class="el_td">
+							<p class="pointer" v-for="(sitem,sIndex) in item.plan" @click="showSubprocess(sitem)" :key="index+'td1'+sIndex">{{sitem.name}}</p>
+						</div>
+						<div class="el_td">
+							<p class="pointer" v-for="(sitem,sIndex) in item.implement" @click="showSubprocess(sitem)" :key="index+'td2'+sIndex">{{sitem.name}}</p>
+						</div>
+						<div class="el_td">
+							<p class="pointer" v-for="(sitem,sIndex) in item.monitor" @click="showSubprocess(sitem)" :key="index+'td3'+sIndex">{{sitem.name}}</p>
+						</div>
+						<div class="el_td"><p class="pointer" @click="showSubprocess(item.end)">{{item.end.name}}</p></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="subprocess-wrap" v-if="allSubprocess&&allSubprocess.length>0">
+			<span class="close" @click="close"></span>
+			<div class="el_table">
+				<div class="el_head">
+					<div class="el_th"></div>
+					<div class="el_th">输入</div>
+					<div class="el_th">工具和技术</div>
+					<div class="el_th">输出</div>
+				</div>
+				<div class="el_body">
+					<div class="el_tr" v-for="(bItem,BIndex) in allSubprocess" :key="'subprocess'+BIndex">
+						<div class="el_td"><p>{{bItem.name}}</p></div>
+						<div class="el_td"><p v-for="(item, index) in bItem.input" :key="'input'+index" :style="'color:'+ item.color">{{item.name}}</p></div>
+						<div class="el_td"><p v-for="(item, index) in bItem.tool" :key="'tool'+index" :style="'color:'+ item.color">{{item.name}}</p></div>
+						<div class="el_td"><p v-for="(item, index) in bItem.output" :key="'output'+index" :style="'color:'+ item.color">{{item.name}}</p></div>
+					</div>
+				</div>
+		</div>
+	</div>
+	</div>
+	<script src="./js/vue@2.6.14.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					list5a10:[
+						// 整体
+						{
+							name:'整体',
+							start:{
+								name:'制订项目章程',
+								input:[{name:'项目工作说明书',color:''},{name:'商业论证',color:''},{name:'协议',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+								tool:[{name:'专家判断',color:''},{name:'引导技术',color:''}],
+								output:[{name:'项目章程',color:''}],
+							},
+							plan:[
+								{
+									name:'编制项目管理计划',
+									input:[{name:'项目章程',color:''},{name:'其他过程的输出',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'引导技术',color:''}],
+									output:[{name:'项目管理计划',color:''}],
+								}
+							],
+							implement:[
+								{
+									name:'指导和管理项目执行',
+									input:[{name:'项目管理计划',color:''},{name:'批准的变更请求',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'项目管理信息系统',color:''},{name:'会议',color:''}],
+									output:[{name:'可交付成果',color:''},{name:'工作绩效数据',color:''},{name:'变更请求',color:''},{name:'项目管理计划更新',color:''},{name:'项目文件更新',color:''}],
+								}
+							],
+							monitor:[
+								{
+									name:'监控项目工作',
+									input:[{name:'项目管理计划',color:''},{name:'进度预测',color:''},{name:'成本预测',color:''},{name:'确认的变更',color:'#c51616'},{name:'工作绩效信息',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'分析技术',color:''},{name:'项目管理信息系统',color:''},{name:'会议',color:''}],
+									output:[{name:'变更请求',color:'#c51616'},{name:'工作绩效报告',color:''},{name:'项目管理计划更新',color:''},{name:'项目文件更新',color:''}],
+								},
+								{
+									name:'整体变更控制',
+									input:[{name:'项目管理计划',color:''},{name:'工作绩效报告',color:''},{name:'变更请求',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'会议',color:''},{name:'变更控制工具',color:''}],
+									output:[{name:'批准的变更请求',color:''},{name:'变更日志',color:''},{name:'项目管理计划更新',color:''},{name:'项目文件更新',color:''}],
+								}
+							],
+							end:{
+								name:'项目收尾',
+								input:[{name:'项目管理计划',color:''},{name:'验收的可交付成果',color:''},{name:'组织过程资产',color:''}],
+								tool:[{name:'专家判断',color:''},{name:'分析技术',color:''},{name:'会议',color:''}],
+								output:[{name:'最终产品、服务或成果',color:''},{name:'组织过程资产更新',color:''}],
+							}
+						},
+						// 范围
+						{
+							name:'范围',
+							start:{},
+							plan:[
+								{
+									name:'编制范围管理计划',
+									input:[{name:'项目管理计划',color:''},{name:'项目章程',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'会议',color:''}],
+									output:[{name:'范围管理计划',color:''},{name:'需求管理计划',color:''}],
+								},
+								{
+									name:'收集需求',
+									input:[{name:'范围管理计划',color:''},{name:'需求管理计划',color:''},{name:'干系人管理计划',color:''},{name:'项目章程',color:''},{name:'干系人等级册',color:''}],
+									tool:[{name:'访谈23.4.群体创新技术5.群体决策技术6.问卷调查7.观察8.原型法9.标杆对照10.系统交互图11.文件分析',color:''},{name:'焦点小组',color:''},{name:'引导式研讨会',color:''},{name:'群体创新技术',color:''}],
+									output:[{name:'项目管理计划',color:''}],
+								},
+								{
+									name:'范围定义',
+									input:[{name:'项目章程',color:''},{name:'其他过程的输出',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'引导技术',color:''}],
+									output:[{name:'项目管理计划',color:''}],
+								},
+								{
+									name:'建立WBS',
+									input:[{name:'项目章程',color:''},{name:'其他过程的输出',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'引导技术',color:''}],
+									output:[{name:'项目管理计划',color:''}],
+								}
+							],
+							implement:[],
+							monitor:[
+								{
+									name:'范围控制',
+									input:[{name:'项目管理计划',color:''},{name:'进度预测',color:''},{name:'成本预测',color:''},{name:'确认的变更',color:'#c51616'},{name:'工作绩效信息',color:''},{name:'事业环境因素',color:''},{name:'组织过程资产',color:''}],
+									tool:[{name:'专家判断',color:''},{name:'分析技术',color:''},{name:'项目管理信息系统',color:''},{name:'会议',color:''}],
+									output:[{name:'变更请求',color:'#c51616'},{name:'工作绩效报告',color:''},{name:'项目管理计划更新',color:''},{name:'项目文件更新',color:''}],
+								},
+							],
+							end:{}
+						}
+					],
+					// 子过程
+					allSubprocess:[]
+				}
+			},
+			mounted() {},
+			methods: {
+				// 子过程输入输出
+				showSubprocess(row){
+					this.allSubprocess = [row];
+				},
+				//全部过程输入输出
+				showAllSubprocess(row){
+					this.allSubprocess = [row.start,...row.plan,...row.implement,...row.monitor,row.end]
+				},
+				close(){
+					this.allSubprocess = []
+				},
+			}
+		})
+	</script>
+</body>
+
+</html>
