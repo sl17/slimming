@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Document</title>
+  <title>RK</title>
   <style>
 		*{margin: 0;padding: 0;}
 		html,body{width: 100%;height: 100%;}
@@ -23,11 +23,18 @@
 		.subprocess-wrap{position: relative;}
 		.close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
 		.close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
+    .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
+    .el_dialog .el_dialog_wrap{position: absolute;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;display: flex;align-items: center;}
+    .el_dialog .el_dialog_wrap p.bold{font-weight: bold;}
+    .el_dialog i{font-size: 18px;color: #fff;border-radius: 20px;line-height: 19px;border: 2px solid #fff;position: absolute;top: 18vh;width: 20px;height: 20px;font-style: normal;text-align: center;right: 5vw;cursor: pointer;}
+    .duty_wrap{margin-top: 20px;}
+    .duty_wrap p{margin-bottom: 10px;}
+    .duty_wrap p span{margin-right: 10px;}
 		@media screen and (max-width: 1000px) {
-			.el_table{font-size: 14px;}
+			.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 14px;}
 		}
 		@media screen and (max-width: 750px) {
-			.el_table{font-size: 12px;}
+			.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 12px;}
 			.el_table .el_head .el_th{padding-left: 3px;height: 30px;line-height: 30px;}
 			.wrap .el_table .el_head .el_th:first-child{flex: 0 0 36px}
 			.wrap .el_table .el_head .el_th:last-child{flex: 0 0 60px}
@@ -93,20 +100,38 @@
               <p>{{bItem.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.input" :key="'input'+index" :style="'color:'+ (item.color||'')">
+              <p v-for="(item, index) in bItem.input" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'input'+index" :style="'color:'+ (item.color||'')">
                 {{item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.tool" :key="'tool'+index" :style="'color:'+ (item.color||'')">
+              <p v-for="(item, index) in bItem.tool" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'tool'+index" :style="'color:'+ (item.color||'')">
                 {{item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.output" :key="'output'+index" :style="'color:'+ (item.color||'')">
+              <p v-for="(item, index) in bItem.output" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'output'+index" :style="'color:'+ (item.color||'')">
                 {{item.name}}</p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="el_dialog" v-if="descObj.isDesc">
+      <i @click="closeDesc">×</i>
+      <div class="el_dialog_wrap">
+        <div v-if="descObj.desc&&Array.isArray(descObj.desc)">
+          <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
+        </div>
+        <p v-else>{{descObj.desc}}</p>
+      </div>
+    </div>
+    <!-- 职责 -->
+    <div class="duty_wrap">
+      <p v-for="(item,index) in duty" :key="'d'+index">
+        <span>{{item.name}} :</span>
+        <span v-if="item.power&&item.power.length>0" @click="getDesc(item.power)">权力与义务</span>
+        <span v-if="item.ability&&item.ability.length>0" @click="getDesc(item.ability)">能力</span>
+        <span v-if="item.duty&&item.duty.length>0" @click="getDesc(item.duty)">职责</span>
+      </p>
     </div>
   </div>
   <script src="./js/vue@2.6.14.js"></script>
@@ -115,6 +140,10 @@
       el: '#app',
       data: function () {
         return {
+          descObj:{
+            desc:'',
+            isDesc:true,
+          },
           list5a10: [
             // 整体
             {
@@ -138,19 +167,19 @@
                   name: '指导和管理项目执行',
                   input: [{ name: '项目管理计划' }, { name: '批准的变更请求' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '项目管理信息系统' }, { name: '会议' }],
-                  output: [{ name: '可交付成果' }, { name: '工作绩效数据' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }],
+                  output: [{ name: '可交付成果' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }],
                 }
               ],
               monitor: [
                 {
                   name: '监控项目工作',
-                  input: [{ name: '项目管理计划' }, { name: '进度预测' }, { name: '成本预测' }, { name: '确认的变更', color: '#c51616' }, { name: '工作绩效信息' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '进度预测' }, { name: '成本预测' }, { name: '确认的变更', color: '#c51616' }, { name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '分析技术' }, { name: '项目管理信息系统' }, { name: '会议' }],
-                  output: [{ name: '变更请求', color: '#c51616' }, { name: '工作绩效报告' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }],
+                  output: [{ name: '变更请求', color: '#c51616' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }],
                 },
                 {
                   name: '整体变更控制',
-                  input: [{ name: '项目管理计划' }, { name: '工作绩效报告' }, { name: '变更请求' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }, { name: '变更请求' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '会议' }, { name: '变更控制工具' }],
                   output: [{ name: '批准的变更请求' }, { name: '变更日志' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }],
                 }
@@ -196,15 +225,15 @@
               monitor: [
                 {
                   name: '范围确认',
-                  input: [{ name: '项目管理计划' }, { name: '需求文件' }, { name: '需求跟踪矩阵' }, { name: '核实的可交付成果' }, { name: '工作绩效数据' }],
+                  input: [{ name: '项目管理计划' }, { name: '需求文件' }, { name: '需求跟踪矩阵' }, { name: '核实的可交付成果' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。'  }],
                   tool: [{ name: '检查' }, { name: '群体决策技术' }],
-                  output: [{ name: '验收的可交付成果', color: '#c51616' }, { name: '变更请求', color: '#c51616' }, { name: '工作绩效信息' }, { name: '项目文件更新' }],
+                  output: [{ name: '验收的可交付成果', color: '#c51616' }, { name: '变更请求', color: '#c51616' }, { name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '项目文件更新' }],
                 },
                 {
                   name: '范围控制',
-                  input: [{ name: '项目管理计划' }, { name: '需求文件' }, { name: '需求跟踪矩阵' }, { name: '工作绩效数据' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '需求文件' }, { name: '需求跟踪矩阵' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '组织过程资产' }],
                   tool: [{ name: '偏差分析' }],
-                  output: [{ name: '工作绩效信息' }, { name: '变更请求', color: '#c51616' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求', color: '#c51616' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 },
               ],
               end: {}
@@ -255,9 +284,9 @@
               monitor: [
                 {
                   name: '进度控制',
-                  input: [{ name: '项目管理计划' }, { name: '项目进度计划' }, { name: '工作绩效数据' }, { name: '工作日历' }, { name: '进度数据' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '项目进度计划' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '工作日历' }, { name: '进度数据' }, { name: '组织过程资产' }],
                   tool: [{ name: '绩效审查' }, { name: '项目管理软件' }, { name: '资源优化技术' }, { name: '建模技术' }, { name: '提前量与滞后量' }, { name: '进度压缩' }, { name: '进度计划编制工具' }],
-                  output: [{ name: '工作绩效信息' }, { name: '进度预测' }, { name: '变更请求' }, { name: '项目管理计划更新(进度基础、进度管理计划、成本基准)' }, { name: '项目文件更新(进度数据、项目进度计划、风险登记册)' }, { name: '组织过程资产更新(偏差原因、纠正措施、其他经验教训)' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '进度预测' }, { name: '变更请求' }, { name: '项目管理计划更新(进度基础、进度管理计划、成本基准)' }, { name: '项目文件更新(进度数据、项目进度计划、风险登记册)' }, { name: '组织过程资产更新(偏差原因、纠正措施、其他经验教训)' }],
                 },
               ],
               end: {}
@@ -290,9 +319,9 @@
               monitor: [
                 {
                   name: '控制成本',
-                  input: [{ name: '项目管理计划' }, { name: '项目资金需求' }, { name: '工作绩效数据' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '项目资金需求' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '组织过程资产' }],
                   tool: [{ name: '挣值管理' }, { name: '预测' }, { name: '完工尚需绩效指数' }, { name: '绩效审查' }, { name: '项目管理软件' }, { name: '储备分析' }],
-                  output: [{ name: '工作绩效信息' }, { name: '成本预测' }, { name: '变更请求' }, { name: '项目管理计划更新(成本管理计划、成本基准)' }, { name: '项目文件更新(成本估算、成本依据)' }, { name: '组织过程资产更新(偏差原因、纠正措施、财务数据库、其他经验教训)' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '成本预测' }, { name: '变更请求' }, { name: '项目管理计划更新(成本管理计划、成本基准)' }, { name: '项目文件更新(成本估算、成本依据)' }, { name: '组织过程资产更新(偏差原因、纠正措施、财务数据库、其他经验教训)' }],
                 },
               ],
               end: {}
@@ -308,8 +337,6 @@
                   tool: [{ name: '成本效益分析' }, { name: '质量成本' }, { name: '七种基本质量工具' }, { name: '标杆对照' }, { name: '实验设计' }, { name: '统计抽样' }, { name: '其他质量规划工具' }, { name: '会议' }],
                   output: [{ name: '质量管理计划' }, { name: '过程改进计划' }, { name: '质量测量指标' }, { name: '质量核对单' }, { name: '项目文件更新(干系人登记册、责任分配矩阵、WBS和WBS词典)' }],
                 },
-
-
               ],
               implement: [
                 {
@@ -322,9 +349,9 @@
               monitor: [
                 {
                   name: '控制质量',
-                  input: [{ name: '质量管理计划' }, { name: '质量测量指标' }, { name: '质量核对单' }, { name: '工作绩效数据' }, { name: '批准的变更请求' }, { name: '可交付成果' }, { name: '项目文件' }, { name: '组织过程资产' }],
+                  input: [{ name: '质量管理计划' }, { name: '质量测量指标' }, { name: '质量核对单' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '批准的变更请求' }, { name: '可交付成果' }, { name: '项目文件' }, { name: '组织过程资产' }],
                   tool: [{ name: '七种基本质量工具' }, { name: '统计抽样' }, { name: '检查' }, { name: '审查已批准的变更请求' }],
-                  output: [{ name: '质量控制测量结果' }, { name: '确认的变更' }, { name: '核实可交付成果' }, { name: '工作绩效信息' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新(质量标准、协议、质量审计报告、培训计划、过程文档)' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '质量控制测量结果' }, { name: '确认的变更' }, { name: '核实可交付成果' }, { name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新(质量标准、协议、质量审计报告、培训计划、过程文档)' }, { name: '组织过程资产更新' }],
                 },
               ],
               end: {}
@@ -356,7 +383,7 @@
                 },
                 {
                   name: '管理项目团队',
-                  input: [{ name: '人力资源管理计划' }, { name: '项目人员分派' }, { name: '团队绩效评价' }, { name: '问题日志' }, { name: '工作绩效报告' }, { name: '组织过程资产' }],
+                  input: [{ name: '人力资源管理计划' }, { name: '项目人员分派' }, { name: '团队绩效评价' }, { name: '问题日志' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }, { name: '组织过程资产' }],
                   tool: [{ name: '观察和交谈' }, { name: '项目绩效评估' }, { name: '冲突管理' }, { name: '人际关系技能' }],
                   output: [{ name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '事业环境因素更新' }, { name: '组织过程资产更新' }],
                 }
@@ -379,7 +406,7 @@
               implement: [
                 {
                   name: '管理沟通',
-                  input: [{ name: '沟通管理计划' }, { name: '工作绩效报告' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
+                  input: [{ name: '沟通管理计划' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '沟通技术' }, { name: '沟通模型' }, { name: '沟通方法' }, { name: '信息管理系统' }, { name: '报告绩效' }],
                   output: [{ name: '项目沟通' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 }
@@ -387,9 +414,9 @@
               monitor: [
                 {
                   name: '控制沟通',
-                  input: [{ name: '项目管理计划' }, { name: '项目沟通' }, { name: '问题日志' }, { name: '工作绩效数据' }, { name: '组织过程资产' }],
+                  input: [{ name: '项目管理计划' }, { name: '项目沟通' }, { name: '问题日志' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '组织过程资产' }],
                   tool: [{ name: '信息管理系统' }, { name: '专家判断' }, { name: '会议' }],
-                  output: [{ name: '工作绩效信息' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 }
               ],
               end: {}
@@ -434,9 +461,9 @@
               monitor: [
                 {
                   name: '控制风险',
-                  input: [{ name: '项目管理计划' }, { name: '风险等级册' }, { name: '工作绩效数据' }, { name: '工作绩效报告' }],
+                  input: [{ name: '项目管理计划' }, { name: '风险等级册' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }],
                   tool: [{ name: '风险再评估' }, { name: '风险审计' }, { name: '偏差与趋势分析' }, { name: '技术绩效测量' }, { name: '储备分析' }, { name: '会议' }],
-                  output: [{ name: '工作绩效信息' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 }
               ],
               end: {}
@@ -464,9 +491,9 @@
               monitor: [
                 {
                   name: '控制采购',
-                  input: [{ name: '项目管理计划' }, { name: '采购文件' }, { name: '协议' }, { name: '批准的变更请求' }, { name: '工作绩效报告' }, { name: '工作绩效数据' }],
+                  input: [{ name: '项目管理计划' }, { name: '采购文件' }, { name: '协议' }, { name: '批准的变更请求' }, { name: '工作绩效报告',desc:'制定决策、提出问题、采取行动或引起关注，而汇编工作绩效信息,所形成的实物或电子项目文件。如:状况报告、备忘录、论证报告等。' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }],
                   tool: [{ name: '合同变更控制系统' }, { name: '采购绩效审查' }, { name: '检查与审计' }, { name: '报告绩效' }, { name: '支付系统' }, { name: '索赔管理' }, { name: '记录管理系统' }],
-                  output: [{ name: '工作绩效信息' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 }
               ],
               end: {
@@ -504,16 +531,71 @@
               monitor: [
                 {
                   name: '控制干系人参与',
-                  input: [{ name: '干系人管理计划' }, { name: '问题日志' }, { name: '工作绩效数据' }, { name: '项目文件' }],
+                  input: [{ name: '干系人管理计划' }, { name: '问题日志' }, { name: '工作绩效数据',desc:'执行项目过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。比如：工作完成百分比、变更请求数量、实际龙本和实际持续时间等数据。' }, { name: '项目文件' }],
                   tool: [{ name: '信息管理系统' }, { name: '专家判断' }, { name: '会议' }],
-                  output: [{ name: '工作绩效信息' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
+                  output: [{ name: '工作绩效信息', desc:'从各控制过程中收集并结合相关背景和跨领域关系，进行整合分析而得到的信息。如:进度绩效。' }, { name: '变更请求' }, { name: '项目管理计划更新' }, { name: '项目文件更新' }, { name: '组织过程资产更新' }],
                 }
               ],
               end: {}
             }
           ],
           // 子过程
-          allSubprocess: []
+          allSubprocess: [],
+          // 作用与职责权力与义务
+          duty:[
+            {
+              name:'发起人',
+              // 权力与义务
+              power:[
+                {label:'1.对项目及其产品提出一些最重要最初步的要求。',type:'1'},
+                {label:'2起草项目章程或授权其它人或者项目经理起草。',type:'1'},
+                {label:'3.亲自签发项目章程或授权项目执行组织高级管理层签发。',type:'1'},
+                {label:'4.与其他重要项目相关方{如客户)一起验收项目产品。',type:'1'},
+                {label:'5.宣布项目关门。',type:'1'}
+              ],
+            },
+            {
+              name:'高级管理层',
+              // 权力与义务
+              power:[
+                {label:'1.接受发起人的授权，委派项目经理，签发项目章程。',type:'1'},
+                {label:'2.鼓励各项目相关方尽早表达和讨论对项目的要求。',type:'1'},
+                {label:'3.允许项目团队有足够的时间制定项目计划。',type:'1'},
+                {label:'4.决定项目范围、时间、成本和质量之间的平衡点，决定这四个分目标之间的优先顺序。',type:'1'},
+                {label:'5.审批高层次项目计划和会影响项目章程的变更请求。',type:'1'},
+                {label:'6.解决在项目经理控制(权力)之外的项目冲突和变更，保护项目免受外来干扰。',type:'1'},
+                {label:'7.支持项目获得必要的资源。',type:'1'},
+                {label:'8.确定管理层所需要的报告的种类、格式、内容和报送时间，并严格遵守。',type:'1'}
+              ],
+              // 能力
+              ability:[
+                {label:'建立项目管理办公室,促进项目管理的有效开展。',type:'2'},
+                {label:'1．把有关工作组织成合适的项目，以便能够当做项目来做。',type:'1'},
+                {label:'2．创造并维持一个良好的项目管理环境，使员工有条件运用项目管理方法。',type:'1'},
+                {label:'3．承担项目组合管理的任务，决定各项目之间的优先顺序。',type:'1'},
+                {label:'4．建立项目管理办公室，促进项目管理的有效开展。',type:'1'}
+              ]
+            },
+            {
+              name:'发起人',
+              // 职责
+              duty:[
+                {label:'1.组建、建设与管理项目团队,包括招募团队成员，分配成员角色与职责,进行团队建设,评价个人与团队工作绩效。',type:'1'},
+                {label:'2.项目计划的编制。项目计划由项目管理团队编制，由项目经理来整合并对其负最终责任,再报各主要干系人和管理层审批。',type:'1'},
+                {label:'3.接项目计划执行和监控项目工作，分析和报告项目的执行情况、发展趋势，并解决执行过程中出现的各种问题。',type:'1'},
+                {label:'4.与所有项目相关方进行有效沟通，维护与相关方之间的关系。',type:'1'},
+                {label:'5.组织项目团队收集工作流程、工作模板和工作数据，总结经验教训。',type:'1'},
+                {label:'6.按项目计划开展项目收尾工作，把项目关门。',type:'1'}
+              ],
+            },
+            {
+              name:'项目管理办公室',
+              // 职责
+              duty:[
+                {label:'项目管理办公室(PMO)是对与项目相关的治理过程进行标准化，并促进资源、方法论、工具和技术共享的一个组织结构。PMO的职责范围可大可小，从提供项目管理支持服务，到直接管理一个或多个项目。',type:'1'},
+              ],
+            },
+          ]
         }
       },
       mounted() { },
@@ -529,6 +611,16 @@
         close() {
           this.allSubprocess = []
         },
+        getDesc(row){
+          if(row){
+            this.descObj.isDesc = true;
+            this.descObj.desc = row;
+          }
+        },
+        closeDesc(){
+          this.descObj.isDesc = false;
+          this.descObj.desc = '';
+        } 
       }
     })
   </script>
