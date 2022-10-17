@@ -5,24 +5,24 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>RK</title>
+  <title>Document</title>
   <style>
-		*{margin: 0;padding: 0;}
-		html,body{width: 100%;height: 100%;}
-		.el_table{width: 100%;border: 1px solid rgb(3, 82, 134);cursor: default;border-top: none;box-sizing: border-box;}
-		.el_table .el_head{display: flex;}
-		.el_table .el_head .el_th{flex: 1;height: 40px;line-height: 40px;background-color: rgb(3, 82, 134);color: #fff;box-sizing: border-box;padding-left: 10px;}
-		.el_table .el_head .el_th:not(:first-child){border-left: 1px solid #fff;}
-		.el_table .el_body .el_tr{display: flex;}
-		.el_table .el_body .el_tr:not(:last-child){border-bottom: 1px solid rgb(3, 82, 134);}
-		.el_table .el_body .el_tr .el_td{flex: 1;padding: 8px 10px;}
-		.el_table .el_body .el_tr .el_td:nth-child(odd){background-color: #cce8ff;}
-		.el_table .el_body .el_tr .el_td:nth-child(even){background-color: #a1cef9;}
-		.el_table .el_body .el_tr .el_td p:not(:last-child){padding-bottom: 3px;}
-		.el_table .el_body .el_tr .el_td p.pointer{cursor: pointer;}
-		.subprocess-wrap{position: relative;}
-		.close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
-		.close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
+    *{margin: 0;padding: 0;}
+    html,body{width: 100%;height: 100%;}
+    .el_table{width: 100%;border: 1px solid rgb(3, 82, 134);cursor: default;border-top: none;box-sizing: border-box;}
+    .el_table .el_head{display: flex;}
+    .el_table .el_head .el_th{flex: 1;height: 40px;line-height: 40px;background-color: rgb(3, 82, 134);color: #fff;box-sizing: border-box;padding-left: 10px;}
+    .el_table .el_head .el_th:not(:first-child){border-left: 1px solid #fff;}
+    .el_table .el_body .el_tr{display: flex;}
+    .el_table .el_body .el_tr:not(:last-child){border-bottom: 1px solid rgb(3, 82, 134);}
+    .el_table .el_body .el_tr .el_td{flex: 1;padding: 8px 10px;}
+    .el_table .el_body .el_tr .el_td:nth-child(odd){background-color: #cce8ff;}
+    .el_table .el_body .el_tr .el_td:nth-child(even){background-color: #a1cef9;}
+    .el_table .el_body .el_tr .el_td p:not(:last-child){padding-bottom: 3px;}
+    .el_table .el_body .el_tr .el_td p.pointer{cursor: pointer;}
+    .subprocess-wrap{position: relative;}
+    .close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
+    .close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
     .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
     .el_dialog .el_dialog_wrap{position: absolute;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;display: flex;align-items: center;}
     .el_dialog .el_dialog_wrap p.bold{font-weight: bold;}
@@ -30,19 +30,19 @@
     .duty_wrap{margin-top: 20px;}
     .duty_wrap p{margin-bottom: 10px;}
     .duty_wrap p span{margin-right: 10px;}
-		@media screen and (max-width: 1000px) {
-			.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 14px;}
-		}
-		@media screen and (max-width: 750px) {
-			.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 12px;}
-			.el_table .el_head .el_th{padding-left: 3px;height: 30px;line-height: 30px;}
-			.wrap .el_table .el_head .el_th:first-child{flex: 0 0 36px}
-			.wrap .el_table .el_head .el_th:last-child{flex: 0 0 60px}
-			.el_table .el_body .el_tr .el_td{padding: 3px;}
-			.wrap .el_table .el_body .el_tr .el_td:first-child{flex: 0 0 30px}
-			.wrap .el_table .el_body .el_tr .el_td:last-child{flex: 0 0 53px}
-			.el_table .el_body .el_tr .el_td p:not(:last-child){border-bottom: 1px dashed #fff;}
-		}
+    @media screen and (max-width: 1000px) {
+    	.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 14px;}
+    }
+    @media screen and (max-width: 750px) {
+    	.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 12px;}
+    	.el_table .el_head .el_th{padding-left: 3px;height: 30px;line-height: 30px;}
+    	.wrap .el_table .el_head .el_th:first-child{flex: 0 0 36px}
+    	.wrap .el_table .el_head .el_th:last-child{flex: 0 0 60px}
+    	.el_table .el_body .el_tr .el_td{padding: 3px;}
+    	.wrap .el_table .el_body .el_tr .el_td:first-child{flex: 0 0 30px}
+    	.wrap .el_table .el_body .el_tr .el_td:last-child{flex: 0 0 53px}
+    	.el_table .el_body .el_tr .el_td p:not(:last-child){border-bottom: 1px dashed #fff;}
+    }
 	</style>
 </head>
 
