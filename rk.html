@@ -24,17 +24,16 @@
     .close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
     .close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
     .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
-    .el_dialog .el_dialog_wrap{position: absolute;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;display: flex;align-items: center;}
-    .el_dialog .el_dialog_wrap p.bold{font-weight: bold;}
-    .el_dialog i{font-size: 18px;color: #fff;border-radius: 20px;line-height: 19px;border: 2px solid #fff;position: absolute;top: 18vh;width: 20px;height: 20px;font-style: normal;text-align: center;right: 5vw;cursor: pointer;}
+    .el_dialog_wrap{position: fixed;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;display: flex;align-items: center;}
+    .el_dialog_wrap p.bold{font-weight: bold;}
     .duty_wrap{margin-top: 20px;}
     .duty_wrap p{margin-bottom: 10px;}
     .duty_wrap p span{margin-right: 10px;}
     @media screen and (max-width: 1000px) {
-    	.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 14px;}
+    	.el_table,.el_dialog_wrap,.duty_wrap{font-size: 14px;}
     }
     @media screen and (max-width: 750px) {
-    	.el_table,.el_dialog .el_dialog_wrap,.duty_wrap{font-size: 12px;}
+    	.el_table,.duty_wrap{font-size: 12px;}
     	.el_table .el_head .el_th{padding-left: 3px;height: 30px;line-height: 30px;}
     	.wrap .el_table .el_head .el_th:first-child{flex: 0 0 36px}
     	.wrap .el_table .el_head .el_th:last-child{flex: 0 0 60px}
@@ -100,29 +99,27 @@
               <p>{{bItem.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.input" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'input'+index" :style="'color:'+ (item.color||'')">
-                {{item.name}}</p>
+              <p v-for="(item, index) in bItem.input" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'input'+index" :style="item&&item.color?'color:'+ item.color:''">
+                {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.tool" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'tool'+index" :style="'color:'+ (item.color||'')">
-                {{item.name}}</p>
+              <p v-for="(item, index) in bItem.tool" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'tool'+index" :style="item&&item.color?'color:'+ item.color:''">
+                {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.output" :class="item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'output'+index" :style="'color:'+ (item.color||'')">
-                {{item.name}}</p>
+              <p v-for="(item, index) in bItem.output" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'output'+index" :style="item&&item.color?'color:'+ item.color:''">
+                {{item&&item.name}}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="el_dialog" v-if="descObj.isDesc">
-      <i @click="closeDesc">×</i>
-      <div class="el_dialog_wrap">
-        <div v-if="descObj.desc&&Array.isArray(descObj.desc)">
-          <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
-        </div>
-        <p v-else>{{descObj.desc}}</p>
+    <div class="el_dialog" v-if="descObj.isDesc" @click="closeDesc"></div>
+    <div class="el_dialog_wrap" v-if="descObj.isDesc">
+      <div v-if="descObj.desc&&Array.isArray(descObj.desc)">
+        <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
       </div>
+      <p v-else>{{descObj.desc}}</p>
     </div>
     <!-- 职责 -->
     <div class="duty_wrap">
@@ -152,7 +149,7 @@
                 name: '制订项目章程',
                 input: [{ name: '项目工作说明书' }, { name: '商业论证' }, { name: '协议' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                 tool: [{ name: '专家判断' }, { name: '引导技术' }],
-                output: [{ name: '项目章程' }],
+                output: [{ name: '项目章程' ,desc:[{label:'正式确认项目的存在，没有项目章程就没有项目的存在',type:'1'},{label:'签字后的项目章程，标志着项目的正式启动',type:'1'},{label:'任命项目经理，给项目经理授权',type:'1'},{label:'明确了项目的粗略要求（范围、进度、成本、质量）',type:'1'},{label:'把项目与公司的日常运作联系起来',type:'1'},{label:'多阶段项目中需要项目章程来正式启动一个新阶段',type:'1'}]}],
               },
               plan: [
                 {
@@ -577,7 +574,7 @@
               ]
             },
             {
-              name:'发起人',
+              name:'项目经理',
               // 职责
               duty:[
                 {label:'1.组建、建设与管理项目团队,包括招募团队成员，分配成员角色与职责,进行团队建设,评价个人与团队工作绩效。',type:'1'},
