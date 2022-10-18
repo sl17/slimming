@@ -24,8 +24,13 @@
     .close{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 29px;height: 14px;border-top: none;cursor: pointer;}
     .close::after{content:' ';position: absolute;top:3px;left:9px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
     .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
-    .el_dialog_wrap{position: fixed;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;display: flex;align-items: center;}
+    .el_dialog_wrap{position: fixed;width: 90vw;max-height: 50vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;}
     .el_dialog_wrap p.bold{font-weight: bold;}
+    .el_dialog_wrap .dialog_table{border-top: 1px solid #ddd;}
+    .el_dialog_wrap .dialog_table p{display: flex;}
+    .el_dialog_wrap .dialog_table p:first-child{background-color: #eee;}
+    .el_dialog_wrap .dialog_table p span{flex:1;width: 50%;box-sizing: border-box;border-bottom: 1px solid #ddd;}
+    .el_dialog_wrap .dialog_table p span:last-child{border-left: 1px solid #ddd;}
     .duty_wrap{margin-top: 20px;}
     .duty_wrap p{margin-bottom: 10px;}
     .duty_wrap p span{margin-right: 10px;}
@@ -99,15 +104,15 @@
               <p>{{bItem.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.input" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'input'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.input" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'input'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.tool" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'tool'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.tool" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'tool'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.output" :class="item&&item.desc?'pointer':''" @click="getDesc(item.desc)" :key="'output'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.output" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'output'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
           </div>
@@ -120,14 +125,20 @@
         <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
       </div>
       <p v-else>{{descObj.desc}}</p>
+      <div v-if="descObj.table&&descObj.table.length>0" class="dialog_table">
+        <p v-for="(item,index) in descObj.table">
+          <span>{{item.td1}}</span>
+          <span>{{item.td2}}</span>
+        </p>
+      </div>
     </div>
     <!-- 职责 -->
     <div class="duty_wrap">
       <p v-for="(item,index) in duty" :key="'d'+index">
         <span>{{item.name}} :</span>
-        <span v-if="item.power&&item.power.length>0" @click="getDesc(item.power)">权力与义务</span>
-        <span v-if="item.ability&&item.ability.length>0" @click="getDesc(item.ability)">能力</span>
-        <span v-if="item.duty&&item.duty.length>0" @click="getDesc(item.duty)">职责</span>
+        <span v-if="item.power&&item.power.length>0" @click="getDesc({desc:item.power})">权力与义务</span>
+        <span v-if="item.ability&&item.ability.length>0" @click="getDesc({desc:item.ability})">能力</span>
+        <span v-if="item.duty&&item.duty.length>0" @click="getDesc({desc:item.duty})">职责</span>
       </p>
     </div>
   </div>
@@ -140,6 +151,7 @@
           descObj:{
             desc:'',
             isDesc:false,
+            table:[],
           },
           list5a10: [
             // 整体
@@ -197,19 +209,19 @@
                   name: '编制范围管理计划',
                   input: [{ name: '项目管理计划' }, { name: '项目章程' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '会议' }],
-                  output: [{ name: '范围管理计划' }, { name: '需求管理计划' }],
+                  output: [{ name: '范围管理计划',desc:[{label:'项目范围计划编制:对项目管理团队如何管理项目范围提供了指导。',type:'2' },{label:'项目管理团队要把与范围相关的决策在项目管理计划中进行记录。',type:'1' },{label:'根据具体项目工作的需要，项目范围管理计划可以是正式的或非正式的、很详细的或粗略的。',type:'1'},{label:'范围管理计划包括在项目管理计划中，或者是对其的补充。',type:'1'},{label:'内容',type:'2'},{label:'1.制定详细范围说明书。',type:'1'},{label:'2.如何从详细的项目范围说明书创建WBS。',type:'1'},{label:'3.维护和批准WBS',type:'1'},{label:'4.如何对已经完成项目的可交付物进行正式的确认和接受。',type:'1'},{label:'5.如何对详细的项目范围说明书申请变更。',type:'1'}]}, { name: '需求管理计划' }],
                 },
                 {
                   name: '收集需求',
-                  input: [{ name: '范围管理计划' }, { name: '需求管理计划' }, { name: '干系人管理计划' }, { name: '项目章程' }, { name: '干系人等级册' }],
-                  tool: [{ name: '访谈' }, { name: '焦点小组' }, { name: '引导式研讨会' }, { name: '群体创新技术' }, { name: '群体决策技术' }, { name: '问卷调查' }, { name: '观察' }, { name: '原型法' }, { name: '标杆对照' }, { name: '系统交互图' }, { name: '文件分析' }],
-                  output: [{ name: '需求文件' }, { name: '需求跟踪矩阵' }],
+                  input: [{ name: '范围管理计划' }, { name: '需求管理计划' }, { name: '干系人管理计划' }, { name: '项目章程' }, { name: '干系人登记册' }],
+                  tool: [{ name: '访谈' }, { name: '焦点小组',desc:'焦点小组会议是把预先选定的干系人和主题专家集中在一起,了解他们对所提议产品、服务或成果的期望和态度。' , color: '#c51616'}, { name: '引导式研讨会' ,desc:'通过邀请主要的跨职能干系人一起参加会议,引导式研讨会对产品需求进行集中讨论与定义。研讨会是快速定义跨职能需求和协调干系人差异的重要技术。', color: '#c51616'}, { name: '群体创新技术', desc:'头脑风暴法,名义小组技术（头脑风暴法的深化应用)、德尔菲技术、概念/思维导图、亲和图（将大量创意分类)、多标准决策分析。', color: '#c51616'}, { name: '群体决策技术',desc:'一致同意，大多数原则，相对多数原则，独裁。', color: '#c51616' }, { name: '问卷调查',desc:'设计一系列书面问题，向众多受访者快速收集信息。适用于受众多样化，需快速完成调查，受访者地理分散，并适合开展统计分析。' }, { name: '观察' ,desc:'又称“工作跟踪"。'}, { name: '原型法',desc:'是指在实际制造产品之前，先造出该产品的实用模型，并据此征求对需求的反馈意见。原型是有形的实物，它使干系人有机会体验最终产品的模型，而不是只讨论抽象的需求陈述。' }, { name: '标杆对照',desc:'与其他可比组织的做法进行比较，以便识别最佳实践，形成改进意见，并为绩效考核提供依据。' }, { name: '系统交互图',desc:'对产品范围的可视化描绘，显示业务系统及其与人和其他系统之间的交互方式。' }, { name: '文件分析',desc:'通过分析现有文档,是被与需求相关的信息，来挖掘需求。' }],
+                  output: [{ name: '需求文件' }, { name: '需求跟踪矩阵',desc:[{label:'需求跟踪矩阵是一张连接需求与需求源的表格，以便在整个项目生命周期中对需求进行跟踪。',type:'1'},{label:'需求跟踪矩阵把每一个需求与业务目标或项目目标联系起来,有助于确保每一个需求都具有商业价值。',type:'1'},{label:'最后，需求跟踪矩阵为管理产品范围变更提供了框架。',type:'1'},] }],
                 },
                 {
                   name: '范围定义',
                   input: [{ name: '范围管理计划' }, { name: '项目章程' }, { name: '需求文件' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '产品分析' }, { name: '备选方案生成' }, { name: '引导式研讨会' }],
-                  output: [{ name: '项目范围说明书' }, { name: '项目文件更新' }],
+                  output: [{ name: '项目范围说明书',desc:[{label:'项目范围说明书详细描述项目的可交付成果，以及为提交这些可交付成果而必须开展的工作。',type:'2'},{label:'产品范围描述。逐步细化在项目章程和需求文件中所述的产品、服务或成果的特征。',type:'1'},{label:'产品验收标准。定义已完成的产品、服务或成果的验收过程和标准。',type:'1'},{label:'项目可交付成果。',type:'1'},{label:'项目的除外责任。',type:'1'},{label:'项目制约要素。',type:'1'},{label:'项目假设条件。',type:'1'}] ,table:[{td1:'项目章程',td2:'项目范围说明书'},{td1:'项目目的或批准项目的原因',td2:'项目范围描述（渐进明细)'},{td1:'可测量的项目目标和相关的成果标准',td2:'验收标准'},{td1:'高层级需求',td2:'项目可交付成果'},{td1:'高层级项目需求',td2:'项目的除外责任'},{td1:'高层级风险',td2:'项目制约因素'},{td1:'总体里程碑进度计划',td2:'项目假设条件'},{td1:'总体预算',td2:''},{td1:'干系人清单',td2:''},{td1:'项目审批要求',td2:''},{td1:'委派的项目经理及其职责',td2:''},{td1:'发起人或其他批准项目章程的人员姓名和职权',td2:''}]}, { name: '项目文件更新' }],
                 },
                 {
                   name: '建立WBS',
@@ -301,13 +313,13 @@
                 },
                 {
                   name: '估算成本',
-                  input: [{ name: '成本管理计划' }, { name: '人力资源管理计划' }, { name: '范围基准' }, { name: '项目进度计划' }, , { name: '风险登记册' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
+                  input: [{ name: '成本管理计划' }, { name: '人力资源管理计划' }, { name: '范围基准' }, { name: '项目进度计划' }, { name: '风险登记册' }, { name: '事业环境因素' }, { name: '组织过程资产' }],
                   tool: [{ name: '专家判断' }, { name: '类比估算' }, { name: '参数估算' }, { name: '自下而上估算' }, { name: '三点估算' }, { name: '储备分析' }, { name: '质量成本' }, { name: '项目管理软件' }, { name: '卖方投标分析' }, { name: '群体决策技术' }],
                   output: [{ name: '活动成本估算' }, { name: '估算依据' }, { name: '项目文件更新(风险登记册)' }],
                 },
                 {
                   name: '制定预算',
-                  input: [{ name: '成本管理计划' }, { name: '范围基准' }, { name: '活动成本估算' }, { name: '估算依据' }, { name: '项目进度计划' }, { name: '资源日历' }, { name: '风险登记册' }, , { name: '协议' }, { name: '组织过程资产' }],
+                  input: [{ name: '成本管理计划' }, { name: '范围基准' }, { name: '活动成本估算' }, { name: '估算依据' }, { name: '项目进度计划' }, { name: '资源日历' }, { name: '风险登记册' }, { name: '协议' }, { name: '组织过程资产' }],
                   tool: [{ name: '成本汇总' }, { name: '储备分析' }, { name: '专家判断' }, { name: '历史关系' }, { name: '资源限制平衡' }],
                   output: [{ name: '成本基准' }, { name: '项目资金需求' }, { name: '项目文件更新(风险登记册、活动成本估算、项目进度计划)' }],
                 }
@@ -608,10 +620,13 @@
         close() {
           this.allSubprocess = []
         },
-        getDesc(row){
-          if(row){
+        getDesc({desc,table}){
+          console.log(desc);
+          console.log(table);
+          if(desc){
             this.descObj.isDesc = true;
-            this.descObj.desc = row;
+            this.descObj.desc = desc;
+            this.descObj.table = table;
           }
         },
         closeDesc(){
