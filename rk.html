@@ -27,6 +27,7 @@
     .close i::after{content:' ';position: absolute;top: 7px;left: 13px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
     .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
     .el_dialog_wrap{position: fixed;width: 90vw;max-height: 70vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;}
+    .el_dialog_wrap .el_dialog_title{padding-bottom: 8px;border-bottom: 1px solid #ddd;margin-bottom: 8px;}
     .el_dialog_wrap p.bold{font-weight: bold;}
     .el_dialog_wrap .dialog_table{border-top: 1px solid #ddd;}
     .el_dialog_wrap .dialog_table p{display: flex;}
@@ -107,15 +108,15 @@
               <p>{{bItem.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.input" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'input'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.input" :class="item&&item.desc?'pointer':''" @click="getDesc({name:item.name,desc:item.desc||'',table:item.table||''})" :key="'input'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.tool" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'tool'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.tool" :class="item&&item.desc?'pointer':''" @click="getDesc({name:item.name,desc:item.desc||'',table:item.table||''})" :key="'tool'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
             <div class="el_td">
-              <p v-for="(item, index) in bItem.output" :class="item&&item.desc?'pointer':''" @click="getDesc({desc:item.desc||'',table:item.table||''})" :key="'output'+index" :style="item&&item.color?'color:'+ item.color:''">
+              <p v-for="(item, index) in bItem.output" :class="item&&item.desc?'pointer':''" @click="getDesc({name:item.name,desc:item.desc||'',table:item.table||''})" :key="'output'+index" :style="item&&item.color?'color:'+ item.color:''">
                 {{item&&item.name}}</p>
             </div>
           </div>
@@ -124,6 +125,7 @@
     </div>
     <div class="el_dialog" v-if="descObj.isDesc" @click="closeDesc"></div>
     <div class="el_dialog_wrap" v-if="descObj.isDesc">
+      <p class="el_dialog_title">{{descObj.name}}</p>
       <div v-if="descObj.desc&&Array.isArray(descObj.desc)">
         <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
       </div>
@@ -152,6 +154,7 @@
       data: function () {
         return {
           descObj:{
+            name:'',
             desc:'',
             isDesc:false,
             table:[],
@@ -623,12 +626,11 @@
         close() {
           this.allSubprocess = []
         },
-        getDesc({desc,table}){
-          console.log(desc);
-          console.log(table);
+        getDesc({name,desc,table}){
           if(desc){
             this.descObj.isDesc = true;
             this.descObj.desc = desc;
+            this.descObj.name = name;
             this.descObj.table = table;
           }
         },
