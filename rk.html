@@ -26,7 +26,8 @@
     .close i{position: absolute;top: -1px;right: 0;border: 1px solid #eee;border-radius: 0 0 5px 5px;width: 37px;height: 20px;border-top: none;}
     .close i::after{content:' ';position: absolute;top: 7px;left: 13px;border-bottom: 5px solid #ddd;border-left: 6px solid transparent;border-right: 6px solid transparent;}
     .el_dialog{width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
-    .el_dialog_wrap{position: fixed;width: 90vw;max-height: 70vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 25vh;left: 5vw;padding: 8px 10px;overflow: hidden;;overflow-y: auto;box-sizing: border-box;}
+    .el_dialog_wrap{position: fixed;width: 90vw;max-height: 70vh;min-height: 20vh;border-radius: 5px;background-color: #fff;font-size: 16px;line-height: 20px;margin: auto;top: 15vh;left: 5vw;padding: 8px 10px;box-sizing: border-box;}
+    .el_dialog_wrap .el_dialog_overhide{overflow: hidden;overflow-y: auto;max-height: calc(70vh - 52px);}
     .el_dialog_wrap .el_dialog_title{padding-bottom: 8px;border-bottom: 1px solid #ddd;margin-bottom: 8px;}
     .el_dialog_wrap p.bold{font-weight: bold;}
     .el_dialog_wrap .desc_box p{margin-bottom: 8px;}
@@ -127,15 +128,17 @@
     <div class="el_dialog" v-if="descObj.isDesc" @click="closeDesc"></div>
     <div class="el_dialog_wrap" v-if="descObj.isDesc">
       <p class="el_dialog_title">{{descObj.name}}</p>
-      <div v-if="descObj.desc&&Array.isArray(descObj.desc)" class="desc_box">
-        <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
-      </div>
-      <p v-else>{{descObj.desc}}</p>
-      <div v-if="descObj.table&&descObj.table.length>0" class="dialog_table">
-        <p v-for="(item,index) in descObj.table">
-          <span>{{item.td1}}</span>
-          <span>{{item.td2}}</span>
-        </p>
+      <div class="el_dialog_overhide">
+        <div v-if="descObj.desc&&Array.isArray(descObj.desc)" class="desc_box">
+          <p v-for="(item,index) in descObj.desc" :class="item.type==2?'bold':''" :key="'de'+index">{{item.label}}</p>
+        </div>
+        <p v-else>{{descObj.desc}}</p>
+        <div v-if="descObj.table&&descObj.table.length>0" class="dialog_table">
+          <p v-for="(item,index) in descObj.table">
+            <span>{{item.td1}}</span>
+            <span>{{item.td2}}</span>
+          </p>
+        </div>
       </div>
     </div>
     <!-- 职责 -->
