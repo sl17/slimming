@@ -151,10 +151,10 @@
     <div class="duty_wrap">
       <p v-for="(item,index) in duty" :key="'d'+index">
         <span>{{item.name}} :</span>
-        <span v-if="item.power&&item.power.length>0" @click="getDesc({desc:item.power})">权力与义务</span>
-        <span v-if="item.ability&&item.ability.length>0" @click="getDesc({desc:item.ability})">能力</span>
-        <span v-if="item.duty&&item.duty.length>0" @click="getDesc({desc:item.duty})">职责</span>
-        <span v-if="item.count&&item.count.length>0" @click="getDesc({desc:item.count})">职责</span>
+        <span v-if="item.power&&item.power.length>0" @click="getDesc({name:item.name,desc:item.power})">权力与义务</span>
+        <span v-if="item.ability&&item.ability.length>0" @click="getDesc({name:item.name,desc:item.ability})">能力</span>
+        <span v-if="item.duty&&item.duty.length>0" @click="getDesc({name:item.name,desc:item.duty})">职责</span>
+        <span v-if="item.count&&item.count.length>0" @click="getDesc({name:item.name,desc:item.count})">内容</span>
       </p>
     </div>
   </div>
