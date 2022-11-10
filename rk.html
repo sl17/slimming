@@ -152,6 +152,7 @@
         <span v-if="item.duty&&item.duty.length>0" @click="getDesc({name:item.name,desc:item.duty,sub:'职责'})">职责</span>
         <span v-if="item.cont&&item.cont.length>0" @click="getDesc({name:item.name,desc:item.cont,sub:'内容'})">内容</span>
         <span v-if="item.role&&item.role.length>0" @click="getDesc({name:item.name,desc:item.role,sub:'作用'})">作用</span>
+        <span v-if="item.methods&&item.methods.length>0" @click="getDesc({name:item.name,desc:item.methods,sub:'方法'})">方法</span>
       </p>
     </div>
   </div>
@@ -649,7 +650,7 @@
                 {label:'选定的项目生命周期和多阶段项目的项目阶段'},
               ],
               role:[
-                {label:'项目管理计划确定了执行、监视、控制和结束项目的方式与方法，包括项目需要执行的过程、项目的生命周期、里程碑和阶段划分等全局性内容，项目管理计划是其他各子计划的依据和基础，他从整体上指导项目工作的有序进行'}
+                {label:'项目管理计划是项目管理的主体计划或称为总计划，它确定了执行、监视、控制和结束项目的方式与方法，包括项目需要执行的过程、项目的生命周期、里程碑和阶段划分等全局性内容，项目管理计划是其他各子计划的依据和基础，他从整体上指导项目工作的有序进行'}
               ]
             },
             {
@@ -661,6 +662,17 @@
                 {label:'项目的除外责任'},
                 {label:'制约因素'},
                 {label:'假设条件'},
+              ]
+            },
+            {
+              name:'缩短活动工期',
+              methods:[
+                {label:'赶工，投入更多的资源或者增加工作时间来缩短关键活动工期'},
+                {label:'快速跟进，并行实施，以缩短关键路径长度'},
+                {label:'使用高素质资源或经验更丰富得人员'},
+                {label:'减小活动范围或降低活动要求'},
+                {label:'改进方法或技术，提高生产效率'},
+                {label:'加强质量管理，及时发现问题，避免返工，从而缩短工期'},
               ]
             }
           ]
