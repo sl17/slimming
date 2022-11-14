@@ -153,6 +153,7 @@
         <span v-if="item.cont&&item.cont.length>0" @click="getDesc({name:item.name,desc:item.cont,sub:'内容'})">内容</span>
         <span v-if="item.role&&item.role.length>0" @click="getDesc({name:item.name,desc:item.role,sub:'作用'})">作用</span>
         <span v-if="item.methods&&item.methods.length>0" @click="getDesc({name:item.name,desc:item.methods,sub:'方法'})">方法</span>
+        <span v-if="item.steps&&item.steps.length>0" @click="getDesc({name:item.name,desc:item.steps,sub:'步骤'})">步骤</span>
       </p>
     </div>
   </div>
@@ -708,6 +709,16 @@
                 {label:'敏捷开发是一种以人为核心、迭代、循序渐进的开发方法'},
                 {label:'敏捷开发更强调程序员团队与业务专家之间的紧密协作、面对面的沟通（认为比书面的文档更有效)、频繁交付新的软件版本、紧凑而自我组织型的团队、能够很好地适应需求变化的代码编写和团队组织方法，也更注重软件开发中人的作用。'},
                 {label:'Scrum是一种迭代式增量软件开发过程，通常用于敏捷软件开发。'}
+              ]
+            },
+            {
+              name:'分解工作包开展的活动',
+              steps:[
+                {label:'识别和分析可交付成果及相关工作'},
+                {label:'确定WBS的结构和编排方法'},
+                {label:'自上而下逐层细化分解'},
+                {label:'为WBS组件制定和分配标识编码'},
+                {label:'核实可交付成果分解的程度，100%原则。'},
               ]
             }
           ]
