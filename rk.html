@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <style>
     *{margin: 0;padding: 0;}
-    html,body{width: 100%;height: 100%;background-color: #fff7dc;}
+    html,body{width: 100%;height: 100%;background-color: #dcf1ff;}
     #app{padding-bottom: 20px;}
     .el_table{width: 100%;border: 1px solid rgb(3, 82, 134);cursor: default;border-top: none;box-sizing: border-box;}
     .el_table .el_head{display: flex;}
@@ -57,7 +57,6 @@
     	.el_table .el_body .el_tr .el_td p:not(:last-child){border-bottom: 1px dashed #fff;}
     }
     .w5h10_wrap{padding: 0vh 3vw 2vh;}
-    .w5h10_wrap .wrap{}
 
     .name_fiexd{position: fixed;top: 50vh;right: -125px;width: 214px;height: 220px;z-index: 999999999;background-color: rgba(0,0,0,0.02);border-radius:200px;}
     .name_fiexd .wrap{position: relative;top: 56px;left: 50px;width: 114px;height: 114px;border-radius: 60px;transform-origin: 57px 57px;background-color: rgba(0,0,0,0.05);}
@@ -86,7 +85,7 @@
     *{-webkit-tap-highlight-color:rgba(0,0,0,0.01);}
     .more{font-size: 14px;margin-left: 20px;}
     .el-carousel__indicators.el-carousel__indicators--horizontal{display: none;}
-    .process-name{display: block;width: 20px;font-size: 14px;text-align: center;position: fixed;top: 65vh;right: 0px;color: #008eef;font-weight: bold;}
+    .process-name{width: 20px;font-size: 14px;text-align: center;color: #008eef;font-weight: bold;position: absolute;margin-top: 50%;margin-left: 35%;transform: translate(-50%,-50%);}
 
   </style>
   <script src="./js/vue@2.6.14.js"></script>
@@ -194,8 +193,8 @@
         </div>
       </div>
     </div>
-    <span class="process-name">{{processName}}</span>
     <div class="name_fiexd">
+      <span class="process-name">{{processName}}</span>
       <div class="wrap" @click="showName=!showName" :style="'transform: rotateZ('+deg+'deg);'">
         <div class="box" v-show="showName" :class="'box'+(index+1)" v-for="(item,index) in list5a10" @click="getOneName(item.name)" :key="'p'+index">{{item.name}}</div>
       </div>
