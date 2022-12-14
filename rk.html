@@ -855,15 +855,21 @@
           this.selObj = arr;
         },
         handleTouchstart(e) {
-          this.clientY = e.targetTouches[0].clientY;
+          if(this.showName){
+            this.clientY = e.targetTouches[0].clientY;
+          }
         },
         handleTouchmove(e) {
           e.preventDefault()
-          let y = (e.targetTouches[0].clientY - this.clientY) * -1 + this.yy;
-          this.deg = y;
+          if(this.showName){
+            let y = (e.targetTouches[0].clientY - this.clientY) * -1 + this.yy;
+            this.deg = y;
+          }
         },
         handleTouchend(e) {
-          this.yy = this.deg;
+          if(this.showName){
+            this.yy = this.deg;
+          }
         },
 
         // 子过程输入输出
