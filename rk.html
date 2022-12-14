@@ -32,9 +32,28 @@
     .duty_wrap p{margin-bottom: 10px;}
     .duty_wrap p span{margin-right: 10px;}
     .duty_wrap p span:not(:first-child){cursor: default;}
-    .w5h10_wrap{padding: 0vh 3vw 2vh;}
+    .max-box{overflow: hidden;cursor: default;font-size: 14px;}
+    .max-box div.process{display: flex;align-items: center;border: 1px solid #4da6fb;box-sizing: border-box;}
+    .max-box div.process .left{width: 26px;text-align: center;}
+    .max-box div.process .right{flex: 1;border-left: 1px solid #4da6fb;box-sizing: border-box;}
+    .max-box div.process .right>div{display: flex;}
+    .max-box div.process .right .r-left{width: 66px;display: flex;align-items: center;border-right: 1px solid #4da6fb;box-sizing: border-box;padding: 0 4px;}
+    .max-box div.process .right .r-right{flex: 1;}
+    .max-box div.process .right .r-right>div:nth-child(1){background-color: #def1e1;border-bottom: 1px solid #00b71d;}
+    .max-box div.process .right .r-right>div:nth-child(2){background-color: #fbf4e7;border-bottom: 1px solid #dda201;}
+    .max-box div.process .right .r-right>div:nth-child(3){background-color: #eeeeff;}
+    .max-box div.process .right>div:not(:last-child) .r-left{border-bottom: 1px solid #4da6fb;}
+    .max-box div.process .right>div:not(:last-child) .r-right{border-bottom: 1px solid #4da6fb;}
+    .max-box div.process .right .r-right span{display: inline-block;padding:5px 8px }
+    /* .max-box div.process .right .r-right span::before{content: '';display: inline-block;margin-right: 3px;vertical-align: 3px;width: 5px;height: 5px;border-radius: 5px;} */
+    /* .max-box div.process .right .r-right>div:nth-child(1) span::before{background-color: #00b71d;}
+    .max-box div.process .right .r-right>div:nth-child(2) span::before{background-color: #dda201;}
+    .max-box div.process .right .r-right>div:nth-child(3) span::before{background-color: #7c3fff;} */
 
-    .name_fiexd{position: fixed;top: 50vh;right: -120px;width: 214px;height: 220px;z-index: 999999999;background-color: rgba(0,0,0,0.02);border-radius:200px;}
+    .w5h10_wrap{padding: 0vh 3vw 2vh;display: none;}
+    
+
+    .name_fiexd{position: fixed;top: 50vh;right: -120px;width: 214px;height: 220px;z-index: 999999999;background-color: rgba(0,0,0,0.02);border-radius:200px;display: none;}
     .name_fiexd .wrap{position: relative;top: 56px;left: 50px;width: 114px;height: 114px;border-radius: 60px;transform-origin: 57px 57px;background-color: rgba(0,0,0,0.05);z-index: 8;}
     .name_fiexd .box{position: absolute;width: 50px;height: 50px;text-align: center;line-height: 50px;font-size: 14px;border-radius: 50px;transform-origin: 25px 25px;box-shadow: -1px 2px 2px 0 #a2a2a2;}
     .name_fiexd .box1{top: 32px;left: -51px;background-color: #ffb0b0;}
@@ -47,6 +66,11 @@
     .name_fiexd .box8{top: -47px;left: 58px;background-color: #b295ff;transform: rotateZ(-252deg);}
     .name_fiexd .box9{top: -47px;left: 7px;background-color: #ffa0e7;transform: rotateZ(-288deg);}
     .name_fiexd .box10{top: -17px;left: -35px;background-color: #46b5ff;transform: rotateZ(-324deg);}
+    .name_fiexd .process-name{width: 20px;font-size: 14px;text-align: center;color: #008eef;font-weight: bold;position: absolute;top: 50%;left: 35%;transform: translate(-50%,-50%);z-index: 1;}
+    @media screen and (max-width: 700px) {
+      .w5h10_wrap,.name_fiexd{display: block;}
+      .max-box{display: none;}
+    }
 
     .slide{margin-top: 20px;}
     .slide .el-carousel__container{height: calc(100vh - 70px);background-color: rgb(72, 181, 255, .3);}
@@ -65,7 +89,6 @@
     *{-webkit-tap-highlight-color:rgba(0,0,0,0.01);}
     .more{font-size: 14px;margin-left: 15px;}
     .el-carousel__indicators.el-carousel__indicators--horizontal{display: none;}
-    .process-name{width: 20px;font-size: 14px;text-align: center;color: #008eef;font-weight: bold;position: absolute;top: 50%;left: 35%;transform: translate(-50%,-50%);z-index: 1;}
 
   </style>
   <script src="./js/vue@2.6.14.js"></script>
@@ -74,6 +97,63 @@
 
 <body>
   <div id="app">
+    <div class="max-box">
+      <div v-for="item in list5a10" class="process" :key="item.name">
+        <div class="left">{{item.name}}</div>
+        <div class="right">
+          <template v-if="item.start&&JSON.stringify(item.start)!='{}'">
+            <div v-for="(sitem,q) in [item.start]" :key="sitem.name">
+              <div class="r-left">{{sitem.name}}</div>
+              <div class="r-right">
+                <div><span v-for="(ssitem,i) in sitem.input" :key="q+sitem.name+'input'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.tool" :key="q+sitem.name+'tool'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.output" :key="q+sitem.name+'output'+i">{{i+1}}、{{ssitem.name}}</span></div>
+              </div>
+            </div>
+          </template>
+          <template v-if="item.plan&&item.plan.length>0">
+            <div v-for="(sitem,q) in item.plan" :key="sitem.name">
+              <div class="r-left">{{sitem.name}}</div>
+              <div class="r-right">
+                <div><span v-for="(ssitem,i) in sitem.input" :key="q+sitem.name+'input'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.tool" :key="q+sitem.name+'tool'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.output" :key="q+sitem.name+'output'+i">{{i+1}}、{{ssitem.name}}</span></div>
+              </div>
+            </div>
+          </template>
+          <template v-if="item.implement&&item.implement.length>0">
+            <div v-for="(sitem,q) in item.implement" :key="sitem.name">
+              <div class="r-left">{{sitem.name}}</div>
+              <div class="r-right">
+                <div><span v-for="(ssitem,i) in sitem.input" :key="q+sitem.name+'input'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.tool" :key="q+sitem.name+'tool'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.output" :key="q+sitem.name+'output'+i">{{i+1}}、{{ssitem.name}}</span></div>
+              </div>
+            </div>
+          </template>
+          <template v-if="item.monitor&&item.monitor.length>0">
+            <div v-for="(sitem,q) in item.monitor" :key="sitem.name">
+              <div class="r-left">{{sitem.name}}</div>
+              <div class="r-right">
+                <div><span v-for="(ssitem,i) in sitem.input" :key="q+sitem.name+'input'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.tool" :key="q+sitem.name+'tool'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.output" :key="q+sitem.name+'output'+i">{{i+1}}、{{ssitem.name}}</span></div>
+              </div>
+            </div>
+          </template>
+          <template v-if="item.end&&JSON.stringify(item.end)!='{}'">
+            <div v-for="(sitem,q) in [item.end]" :key="sitem.name">
+              <div class="r-left">{{sitem.name}}</div>
+              <div class="r-right">
+                <div><span v-for="(ssitem,i) in sitem.input" :key="q+sitem.name+'input'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.tool" :key="q+sitem.name+'tool'+i">{{i+1}}、{{ssitem.name}}</span></div>
+                <div><span v-for="(ssitem,i) in sitem.output" :key="q+sitem.name+'output'+i">{{i+1}}、{{ssitem.name}}</span></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
     <div class="w5h10_wrap">
       <div class="slide">
         <el-carousel :interval="100" ref="carousel" :autoplay="false" arrow="always" @change="changeCarousel">
@@ -89,17 +169,17 @@
               </div>
               <div class="count">
                 <div class="sm-title"><strong>输入</strong></div>
-                <p v-for="(sitem,i) in item.input" :key="'in'+i"
+                <p v-for="(sitem,i) in item.input" @click="getDesc({name:sitem.name,desc:sitem.desc})" :key="'in'+i"
                   :class="[{'red':sitem.type==2},{'blue':sitem.type==1}]">
                   {{(i+1)+'、'+sitem.name}}
                 </p>
                 <div class="sm-title"><strong>工具与技术</strong></div>
-                <p v-for="(sitem,i) in item.tool" :key="'tool'+i"
+                <p v-for="(sitem,i) in item.tool"  @click="getDesc({name:sitem.name,desc:sitem.desc})" :key="'tool'+i"
                   :class="[{'red':sitem.type==2},{'blue':sitem.type==1}]">
                   {{(i+1)+'、'+sitem.name}}
                 </p>
                 <div class="sm-title"><strong>输出</strong></div>
-                <p v-for="(sitem,i) in item.output" :key="'out'+i"
+                <p v-for="(sitem,i) in item.output"  @click="getDesc({name:sitem.name,desc:sitem.desc})" :key="'out'+i"
                   :class="[{'red':sitem.type==2},{'blue':sitem.type==1}]">
                   {{(i+1)+'、'+sitem.name}}
                 </p>
@@ -155,6 +235,7 @@
   </div>
 
   <script>
+
     new Vue({
       el: '#app',
       data: function () {
@@ -182,7 +263,7 @@
                 type: 1,
                 name: '制订项目章程',
                 input: [{ name: '项目工作说明书', }, { name: '商业论证', }, { name: '协议', }, { name: '事业环境因素', type: 1 }, { name: '组织过程资产', type: 1 }],
-                tool: [{ name: '专家判断', }, { name: '引导技术', type: 2 }],
+                tool: [{ name: '专家判断', }, { name: '引导技术',desc:'头脑风暴、冲突处理、问题解决和会议管理等，都是引导者可以用来帮助团队和个人完成项目活动的关键技术', type: 2 }],
                 output: [{ name: '项目章程', type: 2 }],
               },
               plan: [
@@ -190,7 +271,7 @@
                   type: 2,
                   name: '编制项目管理计划',
                   input: [{ name: '项目章程', }, { name: '其他过程的输出', type: 2 }, { name: '事业环境因素', }, { name: '组织过程资产', }],
-                  tool: [{ name: '专家判断', }, { name: '引导技术', }],
+                  tool: [{ name: '专家判断', }, { name: '引导技术',desc:'头脑风暴、冲突处理、问题解决和会议管理等，都是引导者可以用来帮助团队和个人完成项目活动的关键技术' , type: 2 }],
                   output: [{ name: '项目管理计划', type: 2 }],
                 }
               ],
@@ -806,8 +887,7 @@
                 { label: '质量控制属内部检查，由执行组织的相应质量部门实施;确认范围则是由外部干系人(客户或发起人)对项目可交付成果进行检查验收。' },
               ]
             },
-
-          ]
+          ],
         }
       },
       mounted() {
@@ -819,7 +899,7 @@
         // 手指触摸离开DOM事件
         div.addEventListener('touchend', this.handleTouchend, false);
 
-        this.getOneName('整体')
+        this.getOneName('整体');
       },
       methods: {
         changeCarousel(e) {
@@ -855,21 +935,15 @@
           this.selObj = arr;
         },
         handleTouchstart(e) {
-          if(this.showName){
-            this.clientY = e.targetTouches[0].clientY;
-          }
+          this.clientY = e.targetTouches[0].clientY;
         },
         handleTouchmove(e) {
           e.preventDefault()
-          if(this.showName){
-            let y = (e.targetTouches[0].clientY - this.clientY) * -1 + this.yy;
-            this.deg = y;
-          }
+          let y = (e.targetTouches[0].clientY - this.clientY) * -1 + this.yy;
+          this.deg = y;
         },
         handleTouchend(e) {
-          if(this.showName){
-            this.yy = this.deg;
-          }
+          this.yy = this.deg;
         },
 
         // 子过程输入输出
