@@ -105,7 +105,7 @@
     <div class="changeRC" @click="isRow=!isRow">{{isRow?'COL':'ROW'}}</div>
     <div class="max-box">
       <div v-for="item in list5a10" class="process" :key="item.name">
-        <div class="left">{{item.name}}</div>
+        <div class="left" @click="getDesc({name:item.name,img:'whole',desc:'整体管理的思路'})">{{item.name}}</div>
         <div class="right" :class="{'row':!isRow}">
           <template v-if="item.start&&JSON.stringify(item.start)!='{}'">
             <div v-for="(sitem,q) in [item.start]" :key="sitem.name">
@@ -218,6 +218,9 @@
             <span>{{item.td2}}</span>
           </p>
         </div>
+        <div v-if="descObj.img" style="margin-top: 20px;text-align: center;">
+          <img :src="'./images/'+descObj.img+'.png'" alt="">
+        </div>
       </div>
     </div>
     <div @click="showMore=!showMore" class="more">更多>></div>
@@ -261,6 +264,7 @@
             desc: '',
             isDesc: false,
             table: [],
+            img:''
           },
           selObj: [],
           list5a10: [
@@ -972,7 +976,10 @@
         close() {
           this.allSubprocess = []
         },
-        getDesc({ name, desc, table, sub }) {
+        getDesc({ name, desc, table, sub ,img}) {
+          if(img){
+            this.descObj.img = img;
+          }
           if (desc) {
             this.descObj.isDesc = true;
             this.descObj.desc = desc;
