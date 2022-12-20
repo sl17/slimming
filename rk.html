@@ -912,7 +912,9 @@
       methods: {
         addtxt(row){
           if(row.txtType){
-            this.txtType = row.txtType
+            this.txtType = row.txtType;
+          }else{
+            this.txtType = 0;
           }
         },
         changeCarousel(e) {
