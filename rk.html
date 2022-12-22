@@ -109,7 +109,7 @@
     <div class="changeRC" @click="isRow=!isRow">{{isRow?'COL':'ROW'}}</div>
     <div class="max-box">
       <div v-for="item in list5a10" class="process" :key="item.name">
-        <div class="left" @click="getDesc({name:item.name,img:'whole',desc:'整体管理的思路'})">{{item.name}}</div>
+        <div class="left" @click="getDesc({name:item.name,img:'has'})">{{item.name}}</div>
         <div class="right" :class="{'row':!isRow}">
           <template v-if="item.start&&JSON.stringify(item.start)!='{}'">
             <div v-for="(sitem,q) in [item.start]" :key="sitem.name">
@@ -213,8 +213,8 @@
       </div>
       <span class="process-name">{{processName}}</span>
     </div>
-    <div class="el_dialog" v-if="descObj.isDesc" @click="closeDesc"></div>
-    <div class="el_dialog_wrap" v-if="descObj.isDesc">
+    <div class="el_dialog" v-if="descObj.isDesc||descObj.img" @click="closeDesc"></div>
+    <div class="el_dialog_wrap" v-if="descObj.isDesc||descObj.img">
       <p class="el_dialog_title">{{descObj.name}}</p>
       <div class="el_dialog_overhide">
         <div v-if="descObj.desc&&Array.isArray(descObj.desc)" class="desc_box">
@@ -997,7 +997,8 @@
         },
         getDesc({ name, desc, table, sub ,img}) {
           if(img){
-            this.descObj.img = img;
+            if(name=='整体'){this.descObj.img = 'whole';}
+            if(name=='范围'){this.descObj.img = 'range';}
           }
           if (desc) {
             this.descObj.isDesc = true;
