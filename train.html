@@ -210,7 +210,7 @@
       <div><input type="text" v-model="valueE"><i @click="valueE=''">×</i></div>
       <button @click="save">sub</button>
     </div>
-    <span class="down" v-if="!showBox" @click="showBox=true">down</span>
+    <span class="down" v-if="!showBox" @click="setData">down</span>
   </div>
 
   <script>
@@ -232,16 +232,14 @@
           showBox: true
         }
       },
-      mounted() {
-        let data = { "httpstatus": 200, "data": { "result": ["2s54fnhqKQs3d4RA20atnUDEoU6qAHhhNHFW%2BS6NpUKBZz8N%2F%2FlorrwUPw2e1BtKC7w%2F1qhd6%2F2j%0AlzgukCTkfPgJwP%2FVYVLvsgTKzoDHNrEsgPFYE7tiEb6ZJ1BeBxqzYK99nH0S2FoGCeOIlwz%2BlhZ7%0A7RJtLDXDiQi4RZ77nL57NvzRZNRx0cLnNZ2ghFeFJ2AFNLgghXerHwKDl3gACrkrNPZlIuRGHAis%0Ak%2B8vXduWAsbBtv%2BRqcq29qki1f3Q4FiENrZBe8kZGsuisfcrEFB%2FEqvMPeEQTSLH5%2Bvayp%2Brh3q4%0A75EqOg%3D%3D|15点起售|28000D110404|D1104|DMV|QIP|TZV|QIP|08:23|10:24|02:01|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|02|07|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "j74us1E5sgMQrbqG%2F4WeVV8NfE0eFecTg59QlxL1Ey9BCWzApmXA9bFjYijZU5r1LGaQLkYV9wlS%0Ak04i30J5sWK5gVIqg0b3Rii4gGtJD4ayYq%2FbaiICso94934H4nHuCK2qMSyiG%2FlqEo88XyTk9uMq%0AUTP%2Ft1iaJLpDZ%2Fbfk3XtNJr05eSqwNSbJkgXp77i7QDjQbFUrzyZ29Jfx%2FrzgLJ6ye4ZgJLO93Vu%0ABmAHXd2srnF2SjR%2FhciLuhOFtCWf9wpq2353u%2F8LvhJ%2B0FHMmgKG7z2vAPNTt1QYKQ5rH69MpUrH%0AJUMWcw%3D%3D|15点起售|28000D110601|D1106|DMV|QIP|TZV|QIP|10:41|12:26|01:45|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|02|06|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "fa2K5PtecZmC7EsAyKVxXTUy5j20DMIKO154zpgIhAlz%2FivP7TC4sVzJVHbK7Gruww9RBAsloWFg%0A6yme0jPNbZrJ%2BC%2B18CM4NOXVzkf1XqYO%2Be5V3CfBXwQq%2Fv42vx32sWBcCluKXFH1NbY50wnQOxzB%0AwuSC6iU6fs2yOYIgfA%2BtnW15xUWaiZL7a%2BNp6vUHrQeZ7iug1QpZk65w5No1ztGn0Ps2rrC%2BXssu%0AsF%2FI0eO3nAP79qQDfyPq5EhgCLOpFT0I7UvhHPEyw46yDvwYo%2FXuylUl0T2AQQ66FKE11a46yVJV%0AZyeOxg%3D%3D|15点起售|28000D110802|D1108|DMV|QIP|TZV|QIP|12:05|13:49|01:44|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|03|08|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "I6qoVNah8a7n%2BxuYss1CO54RQstDPjIB3cvsVzsYJE1vOBBKt6Syou3E6d1GhqjD%2FI2U%2Bx6d%2Bjkj%0AN3dgsQuIlShrmg3qa4HgVa52HzGOf2XMSFWhQMsrbj06YP8BjZMgZIb3ORR957CJudfcMY7jaW9P%0AdWlhJE76UbLauTcTQQdGx4Iu4DEktbkXcgtrZtCyzpPaPO2nBlycxy%2BaZMArMzeCvXsLjb%2FnCpEf%0A643QyNNGWggQfVyhJAbQQNFXQzOb3CizHIhTQJ6gnDV15cDxTfNhaVbtWZN9MPbBj31kM9B8GHqW%0AZjPDTQ%3D%3D|15点起售|28000D111201|D1112|DMV|QIP|TZV|QIP|13:22|15:19|01:57|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|02|09|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "gk690oEi5v4vPS1TqZIqKDEwekyTWFskLcDvz7pzDl03DJqm5Hz%2BsZ3M8%2BotQMKow7bz%2B8d5Hi26%0AiaSPjjBEamPSVStq9uzBsli0AikhbuEmt00EDYtZwDpyZJTwP9lg2ltYFV%2FddH2yIGyKEeyAJSvO%0A6eDUc3MFYhRftUO4nwMwz9n3R%2Bx%2F7PekY1%2BnBRlEPNfn1uCJZXZHn%2FaNLNm3o5D1yUjQ5Ps9%2BWiv%0AIUR0%2FIe7631KAjkLXlKhhyuniARXySL1oidabUcpPNrWEbbG9WGQn7JxPr37KwMK3MLWnbrh6BQ2%0A3LagOg%3D%3D|15点起售|28000G253602|G2536|DMV|VAP|TZV|QIP|14:03|15:25|01:22|IS_TIME_NOT_BUY|HEHoTyegs8NeH7oFverDudDm5MBZZ%2BazMhxMEKjXiKT1hlJc|20230212|3|V1|02|04|1|0|||||||||||*|*|*||90M0O0|9MO|0|1||9038500000M020500000O012800000|4@15@|||||1|0#1#0#0#z||", "9uB3Lc7ReNZ4cDYAm3COaiwgqGrZx9tLEz3KDVIH4EZCc2a810QcIYcl01lz54TjxICJrRcYfySj%0ASrNbi8umb6XYaESrFAb4A0%2BZTilYSclRi0rS2FBOaB6LGvePWRLxModBNVmYd%2Fsy5BtABT3JbGk%2B%0AM%2BS6c7wF%2F4M4e0kmOg6MerEHGm6T16PxG0yJHJ6iuGgh%2FnbD8tpxSVLpsIlzOXJ3nKhFkig%2FPwg4%0ArgTNfKaNBL%2Fg75l1VlCqftre24P%2Bg65Yqm%2Fdt%2BryxLqmr7AFTIQZ9mAa%2F5o04DUEJl1O58c%2Bf%2F2B%0A%2FiIOCTS%2FrRY%3D|15点起售|28000G253602|G2536|DMV|VAP|TZV|VAP|14:03|15:42|01:39|IS_TIME_NOT_BUY|GJMAv6ZLE5lH2JJaxVPS4%2FIDSY9mMo6SvyrYiBiRBqeq1EoD|20230212|3|V1|02|05|1|0|||||||||||*|*|*||90M0O0|9MO|0|1||9040400000M021500000O013400000|4@15@|||||1|0#1#0#0#z||", "8HT78BoJ5BQUJjjEKSTf28x2Qjy7Gh%2BZ5t1EgibAqM0A0cA7ZtA7%2F2f2HPre85GsQVrikidwJdY%2B%0AdND168WAzimxaDEyTqFze0TthkkBq0aQoZETWVKwLTxh6L16NOTIc0ySGzU6TGXraoeQYTubbo%2Fg%0AKzrP0rOKQM5telBqf6Fc7%2FTGsRGEg%2BJe5Jtq%2Bat0VAyiI7E6OmG0qza8wFEr3aWwwxIrjkM1jvyA%0A3eSezM8RhlseVLEtwpWwSY7Hc6pMAQhEDao3G58mOz3bDVN1Un9HfkcKMsq4vKI%2Flt43SU59aJUa%0AGBTfiGLN1qg%3D|15点起售|28000G253802|G2538|DMV|VAP|TZV|VAP|16:26|18:12|01:46|IS_TIME_NOT_BUY|GJMAv6ZLE5lH2JJaxVPS4%2FIDSY9mMo6SvyrYiBiRBqeq1EoD|20230212|3|V1|02|06|1|0|||||||||||*|*|*||90M0O0|9MO|0|1||9040400000M021500000O013400000|4@15@|||||1|0#1#0#0#z||", "LrUeIZRpGCf1M0kdZfXDdFds4b5syrxElWhSocIRtNJNFijFRKqHqSJhgKKkgxxvQeoZ%2Fyoux7Fb%0AbPK7qeExfin6f0ptvyczrskqy43ByPc%2FGXJUKh0JPyF3wB7TDGEqZo89yTdZ%2BVItxb7blEd5ry3t%0AwlkA4tBrinlS6Ep4wUnS6ewZrrGqveMNv1zb1tpveuMMba4snYGok1qBcxKWVihw%2FjozRjt2q2VF%0AQMSNjPe7pk3M540%2F8EOcMkO7aL5kHjOF6czTS6NHXjEZuDD2933%2FsiMgxxBPtOFA3LvVIFtzP8tE%0AiPuF0g%3D%3D|15点起售|28000G253802|G2538|DMV|VAP|TZV|QIP|16:26|17:56|01:30|IS_TIME_NOT_BUY|HEHoTyegs8NeH7oFverDudDm5MBZZ%2BazMhxMEKjXiKT1hlJc|20230212|3|V1|02|05|1|0|||||||||||*|*|*||90M0O0|9MO|0|1||9038500000M020500000O012800000|4@15@|||||1|0#1#0#0#z||", "dPXBdKN60cscmve%2Biz%2BBvfMnMBFKJBLmZJSjP601bd040mGPVlFiqjWJt9BQaww86Ghwu14kKzbW%0AGL%2BLYuqpyb0H51sA%2FVlkv9UQVagb%2F9TXn20cD9XmEBZsQt61F5dN5LqGBi82h8xBFIcJV0T1gi7J%0AP99maJWcvEZ4XzcPMJvq7O9WsO%2F5Tg2xYOjPmfPfb0fIHlrQ69TuGH0Zrn0JIBGxgoio%2B%2BG5P%2FWS%0A10x9bIKOOzE3%2FLlDbFoJ9g67YLylj03WrgTGl5fz1%2F3zmtlKka%2FyKXE3%2FyobTyL8eERmGLBvrRxA%0A6x%2F32Q%3D%3D|15点起售|28000D111803|D1118|DMV|QIP|TZV|QIP|18:05|19:49|01:44|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|03|08|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "x6qlt9iLC2M2uP9863%2B%2BQTYrwP79cKx%2BpDR%2BK0A8ytOzw%2FNyhwKTTA07JsUDPW5B9DXIkxqP0Wrf%0AP%2BilVWugxgRcgz%2Ba6WK4dl30AwF7aqK43rkkZo1j3T%2B%2BWuY%2BAzf4St6DdUWnh0GIYd%2FRCFMamJNd%0AKWoRU4Te42xNaV1VgiJpzbhai898MLnBIMrAmj0WB3kFbcIXeKKxr7Immam23x5J9QK4wnLGT8Wy%0AO3CFaV1YLroEntULNC1l9SLjCUWqALbWOYhfXS1o9xC17Mbv%2FnsicUF24FP4PMuEoBE83hpEXCuW%0AFWzm%2Fw%3D%3D|15点起售|28000D112012|D1120|DMV|QIP|TZV|QIP|18:21|20:13|01:52|IS_TIME_NOT_BUY|jDceIaTUnf4olC%2F6skaryOku5aYpRdQi3DhyQIBBikgsLvlG|20230212|3|V1|02|07|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M017700000O011000000O011003000|4@15@|||||1|0#0#0#0#z||", "EdqpEe43RURc4TJofka1zY2FDBCS%2BuI%2F%2FV%2BfBrjkYSnJLiQ6pZADaCKPYU32HOyNT5hFjoPm0qqk%0ARQVRzI0aOv2AsEXkocSgLWt8VwzSA50qHvrhiLzjzGrR67JFIoFVxCko5SVguAw8%2BlMggkhNzPlG%0AbFa587dXRWiS8isotzoh8HAb87wtIoPhyskhzdy0EGEg6e7x%2FM1SPl1ge6uBLv7g5gw4WtDGWtGk%0Anf5RrDx6qNqYV6E9S5YdB5l8Mn4unovIL2SSkoA0HA8r29qyHSmHA3qIturmzQt20DKfCnQURJ0k%0AFvyM4g%3D%3D|15点起售|28000D112401|D1124|DMV|QIP|TZV|QIP|20:52|22:26|01:34|IS_TIME_NOT_BUY|r0X7sTVkvRjGZ2vIvgXkHAY0qba8sKP8kMHlc6Jqh7AhWdC0|20230212|3|V1|03|06|1|0|||||||*||||*|*|||M0O0W0|MOO|0|1||M015900000O009900000O009903000|4@15@|||||1|0#0#0#0#z||"], "flag": "1", "map": { "TZV": "天镇", "VAP": "北京北", "QIP": "清河" } }, "messages": "", "status": true }
-
-        // console.log(data.data.map);
-
-        // this.mapMark = data.data.map;
-        // this.oldData = data.data.result;
-
-      },
       methods: {
+        setData(){
+          this.showBox = true;
+          this.mapMark = {};
+          this.oldData = [];
+          this.newArr = [];
+          this.timeArr =[]
+        },
         // 提交数据
         save() {
           let valueA = this.valueA ? JSON.parse(this.valueA) : { data: { map: {}, result: [] } },
@@ -281,8 +279,6 @@
             obj.n = { start: this.msToDay(startTime), end: this.msToDay(endTime) };
             return obj;
           })
-          // console.log(this.timeDomStr);
-          // console.log(this.newArr);
           this.newArr.map(item => {
             let obj = item.n;
             obj.train = item[3];
@@ -301,8 +297,6 @@
             })
             this.trainNumber.push(obj);
           })
-          console.log(this.trainNumber);
-
         },
         // 年月日转毫秒
         dayToMs(str) {
