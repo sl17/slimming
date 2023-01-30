@@ -66,7 +66,7 @@
       vertical-align: 1px;
       border-radius: 4px;
       position: relative;
-      z-index: 5;
+      z-index: 6;
     }
 
     .right.bot:nth-child(odd) {
@@ -107,6 +107,36 @@
     .right.bot:hover {
       background-color: #78d4ff;
       cursor: default;
+    }
+
+    .right.bot div>i{
+      display: block;
+      position: absolute;
+      top: 15px;
+      left: -1px;
+      height: 1px;
+      width: calc(100% + 1px);
+      background-color: #78d4ff;
+    }
+    .right.bot strong i.e{
+      display: block;
+      position: absolute;
+      top: 10px;
+      left: -37px;
+      height: 1px;
+      width: 15px;
+      background-color: #78d4ff;
+      z-index: 2;
+    }
+    .right.bot strong i.s{
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: -17px;
+      height: 1px;
+      width: 15px;
+      background-color: #78d4ff;
+      z-index: 2;
     }
 
     .inputData {
@@ -192,14 +222,18 @@
         <p class="day">{{item.substring(0,10)}}</p>
         <p class="time">{{item.substring(11,16)}}</p>
       </div>
-
     </div>
     <div class="right bot" v-for="(item,i) in trainNumber" :key="'tb'+i">
       <div v-for="(sitem,i) in item.arr" :key="'ts'+i">
+        <i v-if="sitem.line"></i>
         <span v-if="sitem.str=='s'" class="s">始</span>
         <span v-if="sitem.str=='e'" class="e">终</span>
-        <em>{{item.train}}</em>
-        <strong>{{sitem.station}}</strong>
+        <em v-if="!sitem.station">{{item.train}}</em>
+        <strong v-if="sitem.station" :title="sitem.str=='s'?(item.train+' 始 '+(sitem.start).substring(0,16)):(item.train+' 终 '+(sitem.end).substring(0,16))">
+          <i v-if="sitem.str=='s'" class="s"></i>
+          <i v-if="sitem.str=='e'" class="e"></i>
+          {{sitem.station}}
+        </strong>
       </div>
     </div>
     <div class="inputData" v-if="showBox">
@@ -287,17 +321,26 @@
             obj.s = this.mapMark[item[6]];
             obj.e = this.mapMark[item[7]];
             obj.arr = [];
+            let mark = false;
             this.timeDomStr.map(sitem => {
               if (sitem == obj.start) {
+                mark = true;
                 obj.arr.push({ start: sitem, station: obj.s, str: 's' })
               } else if (sitem == obj.end) {
+                mark = false;
                 obj.arr.push({ end: sitem, station: obj.e, str: 'e' })
               } else {
-                obj.arr.push('')
+                if(mark){
+                  obj.arr.push({line:true})
+                }else{
+                  obj.arr.push('')
+                }
+                
               }
             })
             this.trainNumber.push(obj);
           })
+          console.log(this.trainNumber);
         },
         // 年月日转毫秒
         dayToMs(str) {
