@@ -167,7 +167,7 @@
     </div>
     <div class="w5h10_wrap">
       <div class="slide">
-        <el-carousel :interval="100" ref="carousel" :autoplay="false" arrow="always" @change="changeCarousel">
+        <el-carousel :interval="100" ref="carousel" v-if="selObj&&selObj.length" :autoplay="false" arrow="always" @change="changeCarousel">
           <el-carousel-item v-for="item in selObj" :key="item.name">
             <div>
               <div class="title">
@@ -1461,15 +1461,20 @@
         // 切换新版本
         changeNewVersion(){
           this.dataList = [];
+          this.selObj = [];
           if(this.changeTxt == '新'){
             // implement
             this.changeTxt = '旧';
             this.dataList = JSON.parse(JSON.stringify(this.newList5a10));
-            this.getOneName('整合');
+            this.$nextTick(()=>{
+              this.getOneName('整合');
+            })
           }else{
             this.changeTxt = '新';
             this.dataList = JSON.parse(JSON.stringify(this.list5a10));
-            this.getOneName('整体');
+            this.$nextTick(()=>{
+              this.getOneName('整体');
+            })
           }
         },
         
