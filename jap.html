@@ -15,7 +15,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-			font-size: 16px;
+      font-size: 16px;
     }
     .view {
       width: 100%;
@@ -70,10 +70,10 @@
         <span ref="sizeWrap" class="size-wrap"></span>
         <div class="tab-wrap" ref="tabWrap" @touchstart.prevent="downFn"></div>
       </div>
-			<div v-for="item in arr">
-				<span v-html="analysis(item.label)"></span>
-				<span>{{ item.translate }}</span>
-			</div>
+      <div v-for="item in arr">
+        <span v-html="analysis(item.label)"></span>
+        <span>{{ item.translate }}</span>
+      </div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
@@ -92,7 +92,7 @@
           ]
           const tabWrap = ref(null)
           const sizeWrap = ref(null)
-					// 手机端滑动事件
+          // 手机端滑动事件
           const downFn = event => {
             let isDragging = false
             const DOMSize = {
@@ -124,7 +124,7 @@
             addEventListener('touchend', upFn, false)
             isDragging = true
           }
-					// 日语格式化
+          // 日语格式化
           const analysis = str => {
             let HTML = ''
             function operationFn(str) {
@@ -137,19 +137,12 @@
                 let letter = splitByFirstRegExpMatch(str, /</)[1]
                 // 匹配假名的后面
                 let letterAfter = splitByFirstRegExpMatch(letter, />/)
-                HTML += `
-                  ${charFront[0]}
-                  <strong>
-                    <i>${letterAfter[0]}</i>
-                    <em>${charAfter}</em>
-                  </strong>
-                  `
+                HTML += `${charFront[0]}<strong><i>${letterAfter[0]}</i><em>${charAfter}</em></strong>`
                 if (letterAfter[1].includes('<')) {
                   str = operationFn(letterAfter[1])
                 } else {
                   HTML += letterAfter[1]
                 }
-                console.log(HTML)
                 return HTML
               } else {
                 return str
