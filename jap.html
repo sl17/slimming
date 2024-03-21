@@ -45,7 +45,7 @@
   <body>
     <div id="app">
       <div class="view">
-        <span ref="sizeWrap" class="size-wrap"></span>
+        <span ref="sizeWrap" class="size-wrap">8</span>
         <div class="tab-wrap" ref="tabWrap" @touchstart.prevent="downFn"></div>
       </div>
     </div>
@@ -67,16 +67,20 @@
             }
             const movefn = e => {
               if (!isDragging) return
+							let ev = e.targetTouches[0]
               if (
-                e.clientX > DOMSize.ofLeft &&
-                e.clientX < DOMSize.width + DOMSize.ofLeft
+                ev.clientX > DOMSize.ofLeft &&
+                ev.clientX < DOMSize.width + DOMSize.ofLeft
               ) {
                 // 每个课时占多少像素
                 let unitTime = DOMSize.width / DOMSize.moveDistance
                 // 总移动像素 / 每个/ = 多少课时
                 sizeWrap.value.innerHTML = Math.ceil(
-                  (e.clientX - DOMSize.ofLeft) / unitTime
+                  (ev.clientX - DOMSize.ofLeft) / unitTime
                 )
+								console.log( Math.ceil(
+                  (ev.clientX - DOMSize.ofLeft) / unitTime
+                ));
               }
             }
             const upFn = () => {
