@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html,
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .view {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .tab-wrap {
+      margin: 100px auto;
+      width: 80%;
+      height: 40px;
+      border-radius: 40px;
+      background: repeating-linear-gradient(
+          #f5f5f5 0 10px,
+          rgb(0, 0, 0, 0) 0 11px
+        ),
+        repeating-linear-gradient(to right, #7b7b7b 0 1px, #f5f5f5 0 25px);
+      box-shadow: 0px 0px 0px 7px rgba(247, 247, 247, 0.8);
+    }
+		.size-wrap{
+			position: fixed;
+			top: 30%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 48px;
+			color: rgba(123, 123, 123, 0.4);
+		}
+  </style>
+  <body>
+    <div id="app">
+      <div class="view">
+				<span ref="sizeWrap" class="size-wrap"></span>
+        <div class="tab-wrap" ref="tabWrap" @touchstart="downFn">
+				</div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp, ref, computed } = Vue
+			// mousedown, mousemove, mouseup
+			// touchstart, touchmove, touchend
+      createApp({
+        setup() {
+          const tabWrap = ref(null)
+          const sizeWrap = ref(null)
+          const downFn = event => {
+						let isDragging = false
+						const DOMSize = {
+							width: tabWrap.value.offsetWidth - 20,
+							ofLeft: tabWrap.value.offsetLeft + 10,
+							moveDistance: 24
+						}
+            const movefn = e => {
+							if (!isDragging) return
+							if(e.clientX>DOMSize.ofLeft&&e.clientX<DOMSize.width+DOMSize.ofLeft){
+								// 每个课时占多少像素
+								let unitTime = DOMSize.width/DOMSize.moveDistance
+								// 总移动像素 / 每个/ = 多少课时
+								sizeWrap.value.innerHTML = Math.ceil((e.clientX-DOMSize.ofLeft)/(unitTime))
+							}
+            }
+            const upFn = () => {
+              isDragging = false
+              addEventListener('touchmove', movefn)
+              addEventListener('touchend', upFn)
+            }
+            addEventListener('touchmove', movefn)
+            addEventListener('touchend', upFn)
+            isDragging = true
+          }
+          return {
+            downFn,
+						tabWrap,
+						sizeWrap
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
