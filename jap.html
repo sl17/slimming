@@ -15,6 +15,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+			font-size: 16px;
     }
     .view {
       width: 100%;
@@ -41,6 +42,27 @@
       font-size: 48px;
       color: rgba(123, 123, 123, 0.4);
     }
+
+    span {
+      word-spacing: -0.3em;
+      /* word-spacing: -5px; */
+    }
+    strong {
+      display: inline-block;
+      font-weight: normal;
+      text-align: center;
+      /* font-size: 14px; */
+      background-color: bisque;
+    }
+    em,
+    i {
+      font-style: normal;
+      display: block;
+    }
+    i {
+      font-size: 10px;
+      line-height: 1;
+    }
   </style>
   <body>
     <div id="app">
@@ -48,6 +70,10 @@
         <span ref="sizeWrap" class="size-wrap"></span>
         <div class="tab-wrap" ref="tabWrap" @touchstart.prevent="downFn"></div>
       </div>
+			<div v-for="item in arr">
+				<span v-html="analysis(item.label)"></span>
+				<span>{{ item.translate }}</span>
+			</div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
@@ -56,8 +82,17 @@
       // touchstart, touchmove, touchend
       createApp({
         setup() {
+          let arr = [
+            { label: '{嘗}<かつ>て', katakana: 'かつて', translate: '过去' },
+            {
+              label: '{勉}<べん>{強}<きょう>',
+              la: 'べんきょう',
+              translate: '学习'
+            }
+          ]
           const tabWrap = ref(null)
           const sizeWrap = ref(null)
+					// 手机端滑动事件
           const downFn = event => {
             let isDragging = false
             const DOMSize = {
@@ -67,7 +102,7 @@
             }
             const movefn = e => {
               if (!isDragging) return
-							let ev = e.targetTouches[0]
+              let ev = e.targetTouches[0]
               if (
                 ev.clientX > DOMSize.ofLeft &&
                 ev.clientX < DOMSize.width + DOMSize.ofLeft
@@ -82,17 +117,60 @@
             }
             const upFn = () => {
               isDragging = false
-              addEventListener('touchmove', movefn,false)
-              addEventListener('touchend', upFn,false)
+              addEventListener('touchmove', movefn, false)
+              addEventListener('touchend', upFn, false)
             }
-            addEventListener('touchmove', movefn,false)
-            addEventListener('touchend', upFn,false)
+            addEventListener('touchmove', movefn, false)
+            addEventListener('touchend', upFn, false)
             isDragging = true
+          }
+					// 日语格式化
+          const analysis = str => {
+            let HTML = ''
+            function operationFn(str) {
+              if (str.includes('<') || str.includes('{')) {
+                // 匹配汉字的前面
+                let charFront = splitByFirstRegExpMatch(str, /{/)
+                // 匹配汉字的后面
+                let charAfter = splitByFirstRegExpMatch(charFront[1], /}/)[0]
+                // 匹配假名的前面
+                let letter = splitByFirstRegExpMatch(str, /</)[1]
+                // 匹配假名的后面
+                let letterAfter = splitByFirstRegExpMatch(letter, />/)
+                HTML += `
+                  ${charFront[0]}
+                  <strong>
+                    <i>${letterAfter[0]}</i>
+                    <em>${charAfter}</em>
+                  </strong>
+                  `
+                if (letterAfter[1].includes('<')) {
+                  str = operationFn(letterAfter[1])
+                } else {
+                  HTML += letterAfter[1]
+                }
+                console.log(HTML)
+                return HTML
+              } else {
+                return str
+              }
+            }
+            return operationFn(str)
+          }
+          const splitByFirstRegExpMatch = (string, regexp) => {
+            const match = string.match(regexp)
+            if (match) {
+              const index = match.index + match[0].length
+              return [string.slice(0, index - 1), string.slice(index)]
+            }
+            return [string]
           }
           return {
             downFn,
             tabWrap,
-            sizeWrap
+            sizeWrap,
+            analysis,
+            arr
           }
         }
       }).mount('#app')
