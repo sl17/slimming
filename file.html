@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -12,9 +12,11 @@
     <style>
         * {
             font-size: 14px;
-            margin: 0;padding: 0;
+            margin: 0;
+            padding: 0;
         }
-        body{
+
+        body {
             height: 100vh;
             width: 100vw;
         }
@@ -25,7 +27,10 @@
             height: 29px;
             font-size: 12px;
         }
-        input{height: 25px;}
+
+        input {
+            height: 25px;
+        }
 
         table {
             border: 1px solid #000000;
@@ -33,16 +38,20 @@
         }
 
         .col {
-            background-color: rgba(255, 176, 176, 0.218);
+            background-color: rgb(255 176 176 / 71%);
         }
 
         .mark {
             background-color: rgb(22, 164, 3);
         }
-        .head{
+
+        .head {
             padding-top: 10px;
         }
-        .head p{padding: 0px 0 10px 20px;}
+
+        .head p {
+            padding: 0px 0 10px 20px;
+        }
 
         th,
         td {
@@ -50,12 +59,14 @@
             text-align: center;
 
         }
-        #app{
+
+        #app {
             display: flex;
             flex-direction: column;
             height: 100vh;
         }
-        .cont{
+
+        .cont {
             flex-grow: 1;
             width: 100vw;
             background-color: #0000000b;
@@ -74,7 +85,9 @@
             </p>
             <p> 对比
                 <input v-model="excelTable" placeholder="基础表名：要和谁对比">
-                <input v-model="excelItem" placeholder="对比项"><button @click="changeTable">确定</button>
+                <input v-model="excelItem" placeholder="对比项">
+                <button @click="changeTable">确定</button>
+                <button @click="exportEx">导出</button>
             </p>
             <p>
                 标记
@@ -82,6 +95,7 @@
                 <input v-model="markItemLabel" placeholder="标记项名">
                 <input v-model="markItemValue" placeholder="标记项值" @change="changeMarkTable">
                 <button @click="changeMarkTable">确定</button>
+                <button @click="exportEx">导出</button>
             </p>
         </div>
         <div class="cont">
@@ -100,6 +114,7 @@
     </div>
 </body>
 <script>
+    const base64 = s => window.btoa(unescape(encodeURIComponent(s)));
     new Vue({
         el: '#app',
         data() {
@@ -109,17 +124,58 @@
                 excelItem: "",
                 markTable: '',
                 markItemLabel: '',
-                markItemValue: ''
+                markItemValue: '',
+                exportExcel: [],
+                titleObj: [],
+
             }
         },
         methods: {
+            exportEx(title) {
+                let str = '<tr>';
+                for (let index = 0; index < this.titleObj.length; index++) {
+                    const element = this.titleObj[index];
+                    str += `<td>${element + '\t'}</td>`;
+                }
+                str += '</tr>';
+                // 循环遍历，每行加入tr标签，每个单元格加td标签
+                for (let i = 0; i < this.exportExcel.length; i++) {
+                    str += '<tr>';
+                    for (const key in this.exportExcel[i]) {
+                        if (key !== 'bg' && !key.includes('col')) {
+                            // 增加\t为了不让表格显示科学计数法或者其他格式
+                            str += `<td>${this.exportExcel[i][key] + '\t'}</td>`;
+                        }
+                    }
+                    str += '</tr>';
+                }
+                // Worksheet名
+                const worksheet = 'Sheet1'
+                const uri = 'data:application/vnd.ms-excel;base64,';
+
+                // 下载的表格模板数据
+                const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                    xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                    xmlns="http://www.w3.org/TR/REC-html40">
+                    <head><meta charset='utf-8' /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+                    <x:Name>${worksheet}</x:Name>
+                    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+                    </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+                    </head><body><table>${str}</table></body></html>`;
+                // 下载模板
+                window.location.href = uri + base64(template);
+            },
             changeMarkTable() {
                 let nArr = JSON.parse(JSON.stringify(this.result))
+                this.exportExcel = []
                 nArr.map(item => {
                     if (item.name === this.markTable.trim()) {
                         item.res.map(sitem => {
                             if (sitem[this.markItemLabel] === this.markItemValue) {
-                                sitem[this.markItemLabel + 'col'] = 'mark'
+                                if (sitem.bg) {
+                                    sitem[this.markItemLabel + 'col'] = 'mark'
+                                    this.exportExcel.push(sitem)
+                                }
                             } else {
                                 sitem[this.markItemLabel + 'col'] = undefined
                             }
@@ -131,12 +187,14 @@
             changeTable() {
                 let nArr = JSON.parse(JSON.stringify(this.result))
                 let arr = nArr.filter(item => item.name === this.excelTable)[0].res
+                this.exportExcel = []
                 arr.map(bItem => {
                     nArr.map(item => {
                         if (item.name !== this.excelTable.trim()) {
                             item.res.map(sitem => {
                                 if (bItem[this.excelItem] === sitem[this.excelItem]) {
                                     sitem.bg = 'col'
+                                    this.exportExcel.push(sitem)
                                 }
                             })
                         }
@@ -169,8 +227,10 @@
                         const res = window.XLS.utils.sheet_to_json(zzexcel.Sheets[zzexcel.SheetNames[0]])
                         const o = res[0]
                         let title = []
+                        _that.titleObj = []
                         for (const key in o) {
                             title.push(key)
+                            _that.titleObj.push(key)
                         }
                         _that.result.push({ name, title, res })
                     }
