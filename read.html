@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./js/v2.js"></script>
+  <style>
+    html,
+    body {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app {
+      height: 100vh;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-style: normal;
+    }
+
+    span strong {
+      display: inline-block;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 0 1px;
+    }
+
+    span strong i {
+      font-size: 10px;
+      line-height: 1;
+      font-size: 12px;
+    }
+
+    span strong i,
+    span strong em {
+      display: block;
+    }
+
+    span strong em {
+      line-height: 20px;
+    }
+
+    .operation>* {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .top button {
+      padding: 3px 10px;
+      border-radius: 5px;
+      outline: none;
+      background-color: #fff;
+      border: 1px solid #333;
+    }
+
+    .top button:active {
+      background-color: #eee;
+    }
+
+    textarea {
+      height: 100px;
+      width: 100%;
+      resize: none;
+      outline: none;
+      font-size: 14px;
+      line-height: 20px;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      padding: 10px;
+    }
+
+    .list {
+      flex: 1 1 auto;
+      overflow: hidden;
+      overflow-y: auto;
+      background-color: #eee;
+      padding: 10px;
+    }
+
+    .list p {
+      margin-bottom: 8px;
+      cursor: pointer;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
+      white-space: nowrap;
+    }
+
+    .dialog-wrap {
+      background-color: rgba(0, 0, 0, .5);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .dialog-box {
+      width: 80%;
+      height: 90%;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: #fff;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .dialog-box>i {
+      position: absolute;
+      top: -35px;
+      height: 30px;
+      right: 0px;
+      width: 30px;
+      float: right;
+      border: 2px solid #fff;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .dialog-box>i::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 12px;
+      width: 2px;
+      height: 15px;
+      background-color: #fff;
+      transform: rotate(45deg);
+    }
+
+    .dialog-box>i::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 12px;
+      width: 2px;
+      height: 15px;
+      background-color: #fff;
+      transform: rotate(-45deg);
+    }
+
+    .dialog-box div {
+      flex: 1 1 auto;
+      text-align: left;
+      padding: 20px;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+
+    .dialog-list {
+      line-height: 40px;
+    }
+
+    .dialog-list p {
+      margin-bottom: 10px;
+    }
+
+    .dialog-list p span:first-child {
+      margin-left: 2.5em;
+    }
+
+    .dialog-list p.moral{
+      background-color: #def;
+      box-shadow:  0 -8px 0 0 #def;
+    }
+
+    .right {
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="box">
+      <div class="operation">
+        <div class="top">
+          <a href="https://www.qqxiuzi.cn/zh/pinyin/" target="_blank">获取拼音</a>
+          <button @click="check(txt)">确定</button>
+        </div>
+        <textarea v-model="txt.word"></textarea>
+        <textarea v-model="txt.spell"></textarea>
+      </div>
+      <div class="list">
+        <p v-for="(item, i) in oldList" @click="check(item)" :key="i">{{i+1}}、{{item.title}}</p>
+      </div>
+    </div>
+    <div class="dialog-wrap" v-if="show">
+      <div class="dialog-box">
+        <i @click="hideDialog"></i>
+        <div class="dialog-list">
+          <p v-for="(item, j) in article.list" :class="{'moral': article.moral&&j===article.list.length-1}" :key="'a'+j">
+            <span v-for="(sitem, i) in item"
+              :key="i"><strong><i>{{sitem.spell}}</i><em>{{sitem.word}}</em></strong></span>
+          </p>
+          <p class="right">———— {{article.author}}《{{article.title}}》</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 正式vue
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          txt: {
+            word: '',
+            spell: '',
+          },
+          show: false,
+          article: {
+            author: '',
+            title: '',
+            list: [],
+            moral: false
+          },
+          oldList: [
+            {
+              title: '叶公好龙',
+              author: '',
+              moral: true, // 寓意
+              word: '春秋时期，楚国叶地有一位名叫沈诸梁的县尹，大家都叫他叶公。&叶公喜欢一切与龙有关的东西，可以说达到了酷爱，甚至是痴迷的程度。大到家里的装饰，内外墙壁、家具、门窗、梁柱，小到自己所写的字画、碗盘、衣服、舞剑、被帐等，上面都有龙的图案。在叶公的家里，所到之处，到处都是形状各异的龙，每每看到这些，叶公心里都有说不出的喜欢和满足。凡是到过他家的人，都以为走进了龙宫，因为在这里到处都可以看到龙的图案。“我最喜欢的就是龙！”叶公得意地对大家说。&有一天，叶公喜欢龙的事被天上的真龙知道了，真龙说：“难得有人这么喜欢龙，我得去他家里拜访拜访，让他看看我的真容！”真龙就从天上飞到叶公的家，把头伸进窗户大声喊道：“叶公在家吗？”叶公看到从窗户伸进一个大大的龙头，尾巴正拖在厅堂上，他吓得缩到屋子的一角，大声叫喊：“哇！怪物呀！”叶公这一举动实在出乎真龙的意料，它觉得很奇怪，疑惑地问：“你怎么说我是怪物呢？我是你最喜欢的龙呀！”叶公害怕得直发抖，实话实说：“我喜欢的是像龙的假龙，而不是真的龙呀，救命呀…”叶公话没说完，连忙一溜烟往外逃走了。留下真龙一脸懊恼地说：“哼，看来叶公说喜欢龙这件事是假的，他根本是怕龙嘛！害我还飞来拜访他！”&做人要诚实，要做表里如一的人，不要盲目地去追捧、崇拜一些事物。喜欢一样东西，不能只看它的表面，还要深入了解它内在的本质。',
+              spell: 'chūn qiū shí qī ， chǔ guó yè dì yǒu yī wèi míng jiào shěn zhū liáng de xiàn yǐn ， dà jiā dōu jiào tā yè gōng 。&yè gōng xǐ huān yī qiè yǔ lóng yǒu guān de dōng xī ， kě yǐ shuō dá dào le kù ài ， shèn zhì shì chī mí de chéng dù 。 dà dào jiā lǐ de zhuāng shì ， nèi wài qiáng bì 、 jiā jù 、 mén chuāng 、 liáng zhù ， xiǎo dào zì jǐ suǒ xiě de zì huà 、 wǎn pán 、 yī fú 、 wǔ jiàn 、 bèi zhàng děng ， shàng miàn dōu yǒu lóng de tú àn 。 zài yè gōng de jiā lǐ ， suǒ dào zhī chù ， dào chù dōu shì xíng zhuàng gè yì de lóng ， měi měi kàn dào zhè xiē ， yè gōng xīn lǐ dōu yǒu shuō bù chū de xǐ huān hé mǎn zú 。 fán shì dào guò tā jiā de rén ， dōu yǐ wéi zǒu jìn le lóng gōng ， yīn wèi zài zhè lǐ dào chù dōu kě yǐ kàn dào lóng de tú àn 。 ​“ wǒ zuì xǐ huān de jiù shì lóng ！ ” yè gōng dé yì de duì dà jiā shuō 。”&yǒu yī tiān ， yè gōng xǐ huān lóng de shì bèi tiān shàng de zhēn lóng zhī dào le ， zhēn lóng shuō ： ​“ nán dé yǒu rén zhè me xǐ huān lóng ， wǒ děi qù tā jiā lǐ bài fǎng bài fǎng ， ràng tā kàn kàn wǒ de zhēn róng ！ ” zhēn lóng jiù cóng tiān shàng fēi dào yè gōng de jiā ， bǎ tóu shēn jìn chuāng hù dà shēng hǎn dào ： ​“ yè gōng zài jiā ma ？ ​” yè gōng kàn dào cóng chuāng hù shēn jìn yī gè dà dà de lóng tóu ， wěi bā zhèng tuō zài tīng táng shàng ， tā xià de suō dào wū zi de yī jiǎo ， dà shēng jiào hǎn ： ​“ wā ！ guài wù ya ！ ” yè gōng zhè yī jǔ dòng shí zài chū hū zhēn lóng de yì liào ， tā jué de hěn qí guài ， yí huò de wèn ： ​“ nǐ zěn me shuō wǒ shì guài wù ne ？ wǒ shì nǐ zuì xǐ huān de lóng ya ！ ” yè gōng hài pà de zhí fā dǒu ， shí huà shí shuō ： ​“ wǒ xǐ huān de shì xiàng lóng de jiǎ lóng ， ér bù shì zhēn de lóng ya ， jiù mìng ya … ” yè gōng huà méi shuō wán ， lián máng yī liù yān wǎng wài táo zǒu le 。 liú xià zhēn lóng yī liǎn ào nǎo de shuō ： ​“ hng ， kàn lái yè gōng shuō xǐ huān lóng zhè jiàn shì shì jiǎ de ， tā gēn běn shì pà lóng ma ！ hài wǒ hái fēi lái bài fǎng tā ！ ”&zuò rén yào chéng shí ， yào zuò biǎo lǐ rú yī de rén ， bù yào máng mù de qù zhuī pěng 、 chóng bài yī xiē shì wù 。 xǐ huān yī yàng dōng xī ， bù néng zhǐ kàn tā de biǎo miàn ， hái yào shēn rù liǎo jiě tā nèi zài de běn zhì 。',
+            },
+            {
+              title: '望洋兴叹',
+              author: '',
+              moral: true,
+              word: '很久以前，黄河里住着一位河神，人们叫他河伯。河伯站在黄河岸边，望着滚滚的浪涛由西而来，又奔腾跳跃着向东流去，他得意地说：“黄河真大呀，世上没有哪条河能和它相比。看来，我就是最大的水神啊！”&大海听到这话，告诉他：“在黄河的东面有个地方叫北海，那才真叫大呢。​”&河伯根本不信，说：“北海再大，能大得过黄河吗？​”&大海摇摇头，说：“别说一条黄河，就是几条黄河的水流进北海，也装不满它啊！”&河伯固执地说：“我没见过北海，我不信。”&大海无可奈何，告诉他：“有机会你去北海，就明白我的话了。​”&有一年秋天，天降暴雨，所有的河流暴涨，百川都汇进了黄河，黄河淹没了河心的沙洲，浸灌了岸边的洼地，河面陡然变宽，隔水远望，连河对岸牛马之类的大牲畜都分辨不清了。这一下，河伯更得意了，以为天下最壮观的景象都在自己这里。洋洋自得之余，他想起了大海跟他提起的北海，于是决定去那里一看究竟。&河伯顺流来到黄河的入海口，放眼望去，只见北海汪洋一片，无边无涯，一眼望不到边。他呆呆地看了半天，深有感触地对北海海神说：“原先我自高自大，以为谁都比不上自己，今天我看到你这样广大，无边无际，真是无地自容啊！我要是不来这里，永远都不会知道自己的无知。​”&北海海神谦虚地说：“我在天地间也只是大山里的一块小石头，四海在天地间也就是粮仓中的一粒米，我又有什么广大的呢？​”&观察事物要全面、客观、准确，千万不要狂妄自大、自以为是，要懂得人外有人，天外有天，一山更比一山高，做人要谦虚低调。',
+              spell: 'hěn jiǔ yǐ qián ， huáng hé lǐ zhù zhe yī wèi hé shén ， rén men jiào tā hé bó 。 hé bó zhàn zài huáng hé àn biān ， wàng zhe gǔn gǔn de làng tāo yóu xī ér lái ， yòu bēn téng tiào yuè zhe xiàng dōng liú qù ， tā dé yì de shuō ： ​“ huáng hé zhēn dà ya ， shì shàng méi yǒu nǎ tiáo hé néng hé tā xiāng bǐ 。 kàn lái ， wǒ jiù shì zuì dà de shuǐ shén a ！ ”&dà hǎi tīng dào zhè huà ， gào sù tā ： ​“ zài huáng hé de dōng miàn yǒu gè dì fāng jiào běi hǎi ， nà cái zhēn jiào dà ne 。 ​”&hé bó gēn běn bù xìn ， shuō ： ​“ běi hǎi zài dà ， néng dà de guò huáng hé ma ？ ​”&dà hǎi yáo yáo tóu ， shuō ： ​“ bié shuō yī tiáo huáng hé ， jiù shì jǐ tiáo huáng hé de shuǐ liú jìn běi hǎi ， yě zhuāng bù mǎn tā a ！” &hé bó gù zhí de shuō ： ​“ wǒ méi jiàn guò běi hǎi ， wǒ bù xìn 。 ​” &dà hǎi wú kě nài hé ， gào sù tā ： ​“ yǒu jī huì nǐ qù běi hǎi ， jiù míng bái wǒ de huà le 。 ​”&yǒu yī nián qiū tiān ， tiān jiàng bào yǔ ， suǒ yǒu de hé liú bào zhǎng ， bǎi chuān dōu huì jìn le huáng hé ， huáng hé yān mò le hé xīn de shā zhōu ， jìn guàn le àn biān de wā dì ， hé miàn dǒu rán biàn kuān ， gé shuǐ yuǎn wàng ， lián hé duì àn niú mǎ zhī lèi de dà shēng chù dōu fēn biàn bù qīng le 。 zhè yī xià ， hé bó gèng dé yì le ， yǐ wéi tiān xià zuì zhuàng guān de jǐng xiàng dōu zài zì jǐ zhè lǐ 。 yáng yáng zì dé zhī yú ， tā xiǎng qǐ le dà hǎi gēn tā tí qǐ de běi hǎi ， yú shì jué dìng qù nà lǐ yī kàn jiū jìng 。 &hé bó shùn liú lái dào huáng hé de rù hǎi kǒu ， fàng yǎn wàng qù ， zhǐ jiàn běi hǎi wāng yáng yī piàn ， wú biān wú yá ， yī yǎn wàng bù dào biān 。 tā dāi dāi de kàn le bàn tiān ， shēn yǒu gǎn chù dì duì běi hǎi hǎi shén shuō ： ​“ yuán xiān wǒ zì gāo zì dà ， yǐ wéi shuí dōu bǐ bù shàng zì jǐ ， jīn tiān wǒ kàn dào nǐ zhè yàng guǎng dà ， wú biān wú jì ， zhēn shì wú dì zì róng a ！ wǒ yào shì bù lái zhè lǐ ， yǒng yuǎn dōu bù huì zhī dào zì jǐ de wú zhī 。 ​” &běi hǎi hǎi shén qiān xū de shuō ： ​“ wǒ zài tiān dì jiān yě zhǐ shì dà shān lǐ de yī kuài xiǎo shí tou ， sì hǎi zài tiān dì jiān yě jiù shì liáng cāng zhōng de yī lì mǐ ， wǒ yòu yǒu shén me guǎng dà de ne ？ ​”&guān chá shì wù yào quán miàn 、 kè guān 、 zhǔn què ， qiān wàn bù yào kuáng wàng zì dà 、 zì yǐ wéi shì ， yào dǒng de rén wài yǒu rén ， tiān wài yǒu tiān ， yī shān gèng bǐ yī shān gāo ， zuò rén yào qiān xū dī diào 。',
+            },
+            {
+              title: '五十步笑百步',
+              author: '',
+              moral: true,
+              word: '战国时有个国君叫梁惠王。为了扩大疆域，他想出了许多主意，一次次把百姓赶到战场上为他效命，百姓们敢怒不敢言。&有一次，梁惠王召见孟子，问道：“我在位时，尽心尽力地治理国家。然而有个问题一直藏在心中，想向先生请教。​”&孟子说：“不敢当，大王您请直说。​”&梁惠王说：“我尽心尽力替自己的老百姓着想。比如河内（位于河南省黄河北岸）常年闹灾荒，我就把一部分老百姓迁移到收成较好的河东去，并把收成较好的河东地区的一部分粮食运到河内来，让灾荒地区的老百姓不至于饿死。有时河东遇上灾年，粮食歉收，我也是这样做的。我看到邻国当政者没有哪一个像我这样，但是邻国的百姓并没有减少，而我的百姓也没有增多，这是什么原因呢？​”&孟子回答说：“大王喜欢打仗，我就用打仗来打个比方吧！战场上，两军对垒，短兵相接，奋勇杀敌。一番激烈拼杀后，败方丢盔弃甲，仓皇逃跑；胜方向前一鼓作气，穷追不舍。逃跑的士兵有的跑得快，跑了一百步停下来了；有的跑得慢，跑了五十步停下来了。这时，跑得慢的士兵却为自己只跑了五十步就嘲笑那些跑了一百步的士兵是胆小鬼，您认为这种嘲笑是对的吗？​”&梁惠王不假思索地说：“当然不对，他们只不过没有跑到一百步罢了，但这也是临阵脱逃啊！”&孟子说：“大王如果明白了这其中的道理，就无须纠结心中的困惑了。​”&五十步是跑，一百步也是跑，本质上都是一样的。梁惠王尽管给了百姓一些恩惠，但他发动战争，压榨人民，和别国的暴君没什么区别。&我们要有自知之明，要客观理性地看待自己的缺点和问题。',
+              spell: 'zhàn guó shí yǒu gè guó jūn jiào liáng huì wáng 。 wèi le kuò dà jiāng yù ， tā xiǎng chū le xǔ duō zhǔ yì ， yī cì cì bǎ bǎi xìng gǎn dào zhàn chǎng shàng wèi tā xiào mìng ， bǎi xìng men gǎn nù bù gǎn yán 。 &yǒu yī cì ， liáng huì wáng zhào jiàn mèng zǐ ， wèn dào ： ​“ wǒ zài wèi shí ， jìn xīn jìn lì de zhì lǐ guó jiā 。 rán ér yǒu gè wèn tí yī zhí cáng zài xīn zhōng ， xiǎng xiàng xiān shēng qǐng jiào 。 ​” &mèng zǐ shuō ： “ bù gǎn dāng ， dà wáng nín qǐng zhí shuō 。 ​” &liáng huì wáng shuō ： ​“ wǒ jìn xīn jìn lì tì zì jǐ de lǎo bǎi xìng zhuó xiǎng 。 bǐ rú hé nèi （ wèi yú hé nán shěng huáng hé běi àn ） cháng nián nào zāi huāng ， wǒ jiù bǎ yī bù fèn lǎo bǎi xìng qiān yí dào shōu chéng jiào hǎo de hé dōng qù ， bìng bǎ shōu chéng jiào hǎo de hé dōng dì qū de yī bù fèn liáng shí yùn dào hé nèi lái ， ràng zāi huāng dì qū de lǎo bǎi xìng bù zhì yú è sǐ 。 yǒu shí hé dōng yù shàng zāi nián ， liáng shí qiàn shōu ， wǒ yě shì zhè yàng zuò de 。 wǒ kàn dào lín guó dāng zhèng zhě méi yǒu nǎ yī gè xiàng wǒ zhè yàng ， dàn shì lín guó de bǎi xìng bìng méi yǒu jiǎn shǎo ， ér wǒ de bǎi xìng yě méi yǒu zēng duō ， zhè shì shén me yuán yīn ne ？ ​”&mèng zǐ huí dá shuō ： ​“ dà wáng xǐ huān dǎ zhàng ， wǒ jiù yòng dǎ zhàng lái dǎ gè bǐ fāng ba ！ zhàn chǎng shàng ， liǎng jūn duì lěi ， duǎn bīng xiāng jiē ， fèn yǒng shā dí 。 yī fān jī liè pīn shā hòu ， bài fāng diū kuī qì jiǎ ， cāng huáng táo pǎo ； shèng fāng xiàng qián yī gǔ zuò qì ， qióng zhuī bù shě 。 táo pǎo de shì bīng yǒu de pǎo de kuài ， pǎo le yī bǎi bù tíng xià lái le ； yǒu de pǎo de màn ， pǎo le wǔ shí bù tíng xià lái le 。 zhè shí ， pǎo de màn de shì bīng què wèi zì jǐ zhī pǎo le wǔ shí bù jiù cháo xiào nà xiē pǎo le yī bǎi bù de shì bīng shì dǎn xiǎo guǐ ， nín rèn wéi zhè zhǒng cháo xiào shì duì de ma ？​ ”&liáng huì wáng bù jiǎ sī suǒ de shuō ： ​“ dāng rán bù duì ， tā men zhǐ bù guò méi yǒu pǎo dào yī bǎi bù bà le ， dàn zhè yě shì lín zhèn tuō táo a ！ ” &mèng zǐ shuō ： ​“ dà wáng rú guǒ míng bái le zhè qí zhōng de dào lǐ ， jiù wú xū jiū jié xīn zhōng de kùn huò le 。 ​” &wǔ shí bù shì pǎo ， yī bǎi bù yě shì pǎo ， běn zhì shàng dōu shì yī yàng de 。 liáng huì wáng jǐn guǎn gěi le bǎi xìng yī xiē ēn huì ， dàn tā fā dòng zhàn zhēng ， yā zhà rén mín ， hé bié guó de bào jūn méi shén me qū bié 。&wǒ men yào yǒu zì zhī zhī míng ， yào kè guān lǐ xìng de kàn dài zì jǐ de quē diǎn hé wèn tí 。',
+            },
+            {
+              title: '邹忌比美',
+              author: '',
+              moral: true,
+              word: '齐国邹忌相貌堂堂，身高八尺，体格魁梧，十分漂亮。与邹忌同住一城的徐公也长得一表人才，是齐国有名的美男子。&一天早晨，邹忌站到镜子前仔细端详，他觉得自己神采焕发，容貌美丽，于是问妻子：“你看，我跟城北的徐公比起来，谁更漂亮？​”&他的妻子直接回答说：“肯定是您啊，徐公怎么能跟您比呢？​”&邹忌半信半疑，又问他的妾：“我和城北徐公相比，谁更漂亮呢？​”&妾连忙说：“当然是您了，他哪能和大人相比呢？​”&第二天，客人来访，邹忌陪他聊天，又问客人：“我和城北徐公相比，谁更漂亮呢？”客人毫不犹豫地说：“徐公比不上您，您比他漂亮多了。”邹忌有些沾沾自喜。&恰巧过了一天，徐公到邹忌家登门拜访。邹忌第一眼就被徐公气宇轩昂的气质吸引住了。两人交谈的时候，邹忌不住地打量着徐公，他自觉长得不如徐公。为了证实自己的想法，他偷偷地从镜子里看看自己，再瞧瞧徐公，更觉得自己长得不如徐公。&晚上，邹忌躺在床上，反复地思考着这件事，既然自己长得不如徐公，为什么妻子、妾和客人都说自己比他漂亮呢？最后，他找到了问题的原因：“这些人都是在恭维我啊！妻子说我美，是因为偏爱我；妾说我美，是因为害怕我；客人说我美，是因为有求于我。看来，我是受了身边人的恭维而认不清真正的自我了。​”&听到别人的赞美，不要沾沾自喜，而要冷静地分析这赞美的真假。',
+              spell: 'qí guó zōu jì xiàng mào táng táng ， shēn gāo bā chǐ ， tǐ gé kuí wú ， shí fēn piào liàng 。 yǔ zōu jì tóng zhù yī chéng de xú gōng yě zhǎng dé yī biǎo rén cái ， shì qí guó yǒu míng de měi nán zǐ 。 &yī tiān zǎo chén ， zōu jì zhàn dào jìng zi qián zǐ xì duān xiáng ， tā jué de zì jǐ shén cǎi huàn fā ， róng mào měi lì ， yú shì wèn qī zi ： ​“ nǐ kàn ， wǒ gēn chéng běi de xú gōng bǐ qǐ lái ， shuí gèng piào liàng ？​ ” &tā de qī zi zhí jiē huí dá shuō ： ​“ kěn dìng shì nín a ， xú gōng zěn me néng gēn nín bǐ ne ？ ​” &zōu jì bàn xìn bàn yí ， yòu wèn tā de qiè ： ​“ wǒ hé chéng běi xú gōng xiāng bǐ ， shuí gèng piào liàng ne ？ ​” &qiè lián máng shuō ： ​“ dāng rán shì nín le ， tā nǎ néng hé dà rén xiāng bǐ ne ？ ​” &dì èr tiān ， kè rén lái fǎng ， zōu jì péi tā liáo tiān ， yòu wèn kè rén ：​ “ wǒ hé chéng běi xú gōng xiāng bǐ ， shuí gèng piào liàng ne ？ ​” kè rén háo bù yóu yù de shuō ： ​“ xú gōng bǐ bù shàng nín ， nín bǐ tā piào liàng duō le 。 ​” zōu jì yǒu xiē zhān zhān zì xǐ 。&qià qiǎo guò le yī tiān ， xú gōng dào zōu jì jiā dēng mén bài fǎng 。 zōu jì dì yī yǎn jiù bèi xú gōng qì yǔ xuān áng de qì zhì xī yǐn zhù le 。 liǎng rén jiāo tán de shí hòu ， zōu jì bù zhù de dǎ liáng zhe xú gōng ， tā zì jué zhǎng de bù rú xú gōng 。 wèi le zhèng shí zì jǐ de xiǎng fǎ ， tā tōu tōu de cóng jìng zi lǐ kàn kàn zì jǐ ， zài qiáo qiáo xú gōng ， gèng jué de zì jǐ zhǎng de bù rú xú gōng 。 &wǎn shàng ， zōu jì tǎng zài chuáng shàng ， fǎn fù de sī kǎo zhe zhè jiàn shì ， jì rán zì jǐ zhǎng de bù rú xú gōng ， wèi shén me qī zi 、 qiè hé kè rén dōu shuō zì jǐ bǐ tā piào liàng ne ？ zuì hòu ， tā zhǎo dào le wèn tí de yuán yīn ：​ “ zhè xiē rén dōu shì zài gōng wéi wǒ a ！ qī zi shuō wǒ měi ， shì yīn wèi piān ài wǒ ； qiè shuō wǒ měi ， shì yīn wèi hài pà wǒ ； kè rén shuō wǒ měi ， shì yīn wèi yǒu qiú yú wǒ 。 kàn lái ， wǒ shì shòu le shēn biān rén de gōng wéi ér rèn bù qīng zhēn zhèng de zì wǒ le 。 ​”&tīng dào bié rén de zàn měi ， bù yào zhān zhān zì xǐ ， ér yào lěng jìng de fēn xī zhè zàn měi de zhēn jiǎ 。',
+            },
+            {
+              title: '郑人买履',
+              author: '',
+              moral: true,
+              word: '从前，有个郑国人，因为脚上的鞋子穿坏了，打算到集市上买双新鞋穿。他先把自己脚的尺寸量了一下，做了一把尺子。可是临走时粗心大意，顺手把量好尺寸的尺子放在家中凳子上，起身就走了。&他走到集市上，找到卖鞋的地方，左挑一双，右选一款，终于看中了一双颜色、式样都很满意的鞋子。他心花怒放，高兴地想把尺子拿出来量鞋子的尺码，可是摸遍了浑身上下所有衣兜，他才发现尺子忘在家里了。他尴尬地对卖鞋的人说：“不好意思，老板，我把鞋的尺码忘在家里了，等我回家把尺子拿来再买。”说完，就急急忙忙地往家里跑。鞋摊老板愣愣地望着他远去的背影，好半天才明白过来，摇了摇头，忍不住大笑起来。&他匆匆忙忙地跑回家，拿了尺子，又慌慌张张地跑向集市，他跑得气喘吁吁，也没有休息一下。等他跑到之前鞋摊摆放处，天色已晚，热闹的集市已经变得冷冷清清，鞋摊也早就收摊。郑国人懊恼极了，白白地跑了两趟，却没有买到自己心仪的鞋子。&别人知道了这件事，觉得很奇怪，就问他：“你为什么不用自己的脚去试试鞋子，而偏偏要回家去拿尺子呢？”这个买鞋的郑国人一本正经地回答说：“我们要相信分毫不差的尺度，怎么能相信自己的脚呢？”众人都嗤之以鼻。&墨守成规的教条主义者，因循守旧，不思变通，终将一事无成。',
+              spell: 'cóng qián ， yǒu gè zhèng guó rén ， yīn wèi jiǎo shàng de xié zi chuān huài le ， dǎ suàn dào jí shì shàng mǎi shuāng xīn xié chuān 。 tā xiān bǎ zì jǐ jiǎo de chǐ cùn liáng le yī xià ， zuò le yī bǎ chǐ zi 。 kě shì lín zǒu shí cū xīn dà yì ， shùn shǒu bǎ liàng hǎo chǐ cùn de chǐ zi fàng zài jiā zhōng dèng zi shàng ， qǐ shēn jiù zǒu le 。 &tā zǒu dào jí shì shàng ， zhǎo dào mài xié de dì fāng ， zuǒ tiāo yī shuāng ， yòu xuǎn yī kuǎn ， zhōng yú kàn zhòng le yī shuāng yán sè 、 shì yàng dōu hěn mǎn yì de xié zi 。 tā xīn huā nù fàng ， gāo xìng de xiǎng bǎ chǐ zi ná chū lái liàng xié zi de chǐ mǎ ， kě shì mō biàn le hún shēn shàng xià suǒ yǒu yī dōu ， tā cái fā xiàn chǐ zi wàng zài jiā lǐ le 。 tā gān gà de duì mài xié de rén shuō ：​ “ bù hǎo yì sī ， lǎo bǎn ， wǒ bǎ xié de chǐ mǎ wàng zài jiā lǐ le ， děng wǒ huí jiā bǎ chǐ zi ná lái zài mǎi 。 ​” shuō wán ， jiù jí jí máng máng de wǎng jiā lǐ pǎo 。 xié tān lǎo bǎn lèng lèng de wàng zhe tā yuǎn qù de bèi yǐng ， hǎo bàn tiān cái míng bái guò lái ， yáo le yáo tóu ， rěn bù zhù dà xiào qǐ lái 。 &tā cōng cōng máng máng de pǎo huí jiā ， ná le chǐ zi ， yòu huāng huāng zhāng zhāng de pǎo xiàng jí shì ， tā pǎo de qì chuǎn xū xū ， yě méi yǒu xiū xī yī xià 。 děng tā pǎo dào zhī qián xié tān bǎi fàng chù ， tiān sè yǐ wǎn ， rè nào de jí shì yǐ jīng biàn de lěng lěng qīng qīng ， xié tān yě zǎo jiù shōu tān 。 zhèng guó rén ào nǎo jí le ， bái bái de pǎo le liǎng tàng ， què méi yǒu mǎi dào zì jǐ xīn yí de xié zi 。 &bié rén zhī dào le zhè jiàn shì ， jué de hěn qí guài ， jiù wèn tā ： ​“ nǐ wèi shén me bù yòng zì jǐ de jiǎo qù shì shì xié zi ， ér piān piān yào huí jiā qù ná chǐ zi ne ？ ​” zhè gè mǎi xié de zhèng guó rén yī běn zhèng jīng de huí dá shuō ： ​“ wǒ men yào xiāng xìn fēn háo bù chà de chǐ dù ， zěn me néng xiāng xìn zì jǐ de jiǎo ne ？ ​” zhòng rén dōu chī zhī yǐ bí 。&mò shǒu chéng guī de jiào tiáo zhǔ yì zhě ， yīn xún shǒu jiù ， bù sī biàn tōng ， zhōng jiāng yī shì wú chéng 。',
+            },
+            {
+              title: '截竿入城',
+              author: '',
+              moral: true,
+              word: '有一天，鲁国有一个人在城外得到一根长长的竹竿，他非常高兴，心想：“这么长的竹竿我能派上大用场！”于是决定把它带回城里。&当他拿着这根长长的竹竿来到城门口时，发现城门洞又低又窄，怎么办呢？&于是他先把竹竿竖立起来，拿着它往里走，刚到城门口就听见“哐当”一声，竹竿撞上了城墙，试了好多次，怎么也进不去。这可把他急坏了，他心想：“竖着进不去，不如我把它横过来，横过来就能进去了。”于是，他又把长竹竿横过来拿，可是到了城门口，“哐当”一声，竹竿又撞上了城墙，又试了好多次，还是进不去。随后，他试着把竹竿斜着拿进城门，还是进不去，他实在想不出什么办法来了。眼看着时间一分一秒过去，他急得就像热锅上的蚂蚁，怎么办呢？&过了一会儿，就在他十分绝望又无助的时候，有个老人正好路过这里，看到了这个焦头烂额的鲁国人，摸摸胡须，慢慢悠悠、笑眯眯地说：“小伙子，我虽然不是圣贤，但是见到的事情比较多，我就教教你吧。你为什么不用锯子把这根竹竿从中间截断后再拿着进入城门呢？”鲁国人一听，有道理呀，这样截为两段，竹竿不就可以过城门了嘛！&于是，他就按老人的办法将长长的竹竿截断了。&唉，世界上没有比他们更愚蠢的人了！&做人做事不要自作聪明，要从多角度看待问题，往往解决问题的方法不止一个。',
+              spell: 'yǒu yī tiān ， lǔ guó yǒu yī gè rén zài chéng wài dé dào yī gēn cháng cháng de zhú gān ， tā fēi cháng gāo xìng ， xīn xiǎng ： ​“ zhè me cháng de zhú gān wǒ néng pài shàng dà yòng chǎng ！ ” yú shì jué dìng bǎ tā dài huí chéng lǐ 。 &dāng tā ná zhe zhè gēn cháng cháng de zhú gān lái dào chéng mén kǒu shí ， fā xiàn chéng mén dòng yòu dī yòu zhǎi ， zěn me bàn ne ？ &yú shì tā xiān bǎ zhú gān shù lì qǐ lái ， ná zhe tā wǎng lǐ zǒu ， gāng dào chéng mén kǒu jiù tīng jiàn “ kuāng dāng ” yī shēng ， zhú gān zhuàng shàng le chéng qiáng ， shì le hǎo duō cì ， zěn me yě jìn bù qù 。 zhè kě bǎ tā jí huài le ， tā xīn xiǎng ： ​“ shù zhe jìn bù qù ， bù rú wǒ bǎ tā héng guò lái ， héng guò lái jiù néng jìn qù le 。 ​” yú shì ， tā yòu bǎ cháng zhú gān héng guò lái ná ， kě shì dào le chéng mén kǒu ， ​“ kuāng dāng ” yī shēng ， zhú gān yòu zhuàng shàng le chéng qiáng ， yòu shì le hǎo duō cì ， hái shì jìn bù qù 。 suí hòu ， tā shì zhe bǎ zhú gān xié zhe ná jìn chéng mén ， hái shì jìn bù qù ， tā shí zài xiǎng bù chū shén me bàn fǎ lái le 。 yǎn kàn zhe shí jiān yī fēn yī miǎo guò qù ， tā jí de jiù xiàng rè guō shàng de mǎ yǐ ， zěn me bàn ne ？ &guò le yī huì ér ， jiù zài tā shí fēn jué wàng yòu wú zhù de shí hòu ， yǒu gè lǎo rén zhèng hǎo lù guò zhè lǐ ， kàn dào le zhè gè jiāo tóu làn é de lǔ guó rén ， mō mō hú xū ， màn màn yōu yōu 、 xiào mī mī de shuō ： ​“ xiǎo huǒ zi ， wǒ suī rán bù shì shèng xián ， dàn shì jiàn dào de shì qíng bǐ jiào duō ， wǒ jiù jiāo jiāo nǐ ba 。 nǐ wèi shén me bù yòng jù zi bǎ zhè gēn zhú gān cóng zhōng jiān jié duàn hòu zài ná zhe jìn rù chéng mén ne ？ ” lǔ guó rén yī tīng ， yǒu dào lǐ ya ， zhè yàng jié wéi liǎng duàn ， zhú gān bù jiù kě yǐ guò chéng mén le ma ！ &yú shì ， tā jiù àn lǎo rén de bàn fǎ jiāng cháng cháng de zhú gān jié duàn le 。 &āi ， shì jiè shàng méi yǒu bǐ tā men gèng yú chǔn de rén le ！&zuò rén zuò shì bù yào zì zuò cōng míng ， yào cóng duō jiǎo dù kàn dài wèn tí ， wǎng wǎng jiě jué wèn tí de fāng fǎ bù zhǐ yī gè 。',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            },
+            {
+              title: '',
+              author: '',
+              moral: true,
+              word: '',
+              spell: '',
+            }
+          ]
+        }
+      },
+      methods: {
+        hideDialog() {
+          this.show = false
+        },
+        showDialog() {
+          this.show = true
+        },
+        check(obj) {
+          if (obj.word) {
+            this.showDialog()
+            this.formatWrod(obj)
+          }
+        },
+        formatWrod(obj) {
+          this.article.list = []
+          let wordArr = []
+          let spellArr = []
+          this.article.title = obj.title
+          this.article.author = obj.author
+          this.article.moral = obj.moral
+          if (obj.word.includes('&')) {
+            wordArr = obj.word.split('&')
+            spellArr = obj.spell.split('&')
+          } else {
+            wordArr = [obj.word]
+            spellArr = [obj.spell]
+          }
+          wordArr.forEach((el, j) => {
+            const obj = []
+            const wordList = el.split('')
+            const spellList = spellArr[j].split(' ')
+            wordList.forEach((item, i) => {
+              const sObj = {
+                word: item,
+                spell: spellList[i],
+              }
+              obj.push(sObj)
+            });
+            this.article.list.push(obj)
+          })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
