@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./v3/index.css">
+	<script src="./v3/v3.js"></script>
+	<script src="./v3/index.js"></script>
+	<title>vue3 + ElementPlus</title>
+	<style>
+		body,
+		html {
+			background-color: #000;
+		}
+
+		* {
+			font-size: 12px;
+			color: #c18804;
+			box-sizing: border-box;
+		}
+
+		input {
+			display: block;
+			border-radius: 5px;
+			border: 1px solid #45612d;
+			outline: none;
+			height: 20px;
+			padding: 0 10px;
+			margin-bottom: 5px;
+			width: 100%;
+			background-color: #000;
+		}
+		input.success{
+			border: 1px solid #77ff00;
+		}
+
+		#app {
+			/* display: grid;
+			grid-template-columns: repeat(auto-fill, 300px);
+			grid-row-gap: 20px;
+			grid-column-gap: 20px; */
+		}
+
+		.box {
+			width: 400px;
+		}
+		.tips{
+			color: #ffff;
+			position: fixed;top: 0;right: 0;
+		}
+	</style>
+</head>
+<!-- 
+  注意不要使用但斜杠标签 
+    例如：<el-table-column prop="date" label="Date"/>
+    要写成： <el-table-column prop="date" label="Date"></el-table-column>
+ -->
+
+<body>
+	<div id="app">
+		<div class="tips">链接输入?type=q可以乱序；	输入?num=q输入框都变10个<button @click="check()">数量验证</button></div>
+		<div class="box" v-for="item in list">
+			<p>{{item.name}}</p>
+			<input v-for="sitem in item.value" value=""  :class="numSuccess&&sitem <= item.old?'success':''" :placeholder="sitem" type="text"></input>
+		</div>
+	</div>
+</body>
+
+<script>
+	const { createApp, ref, onMounted } = Vue
+	let App = {
+		setup() {
+			const list = ref([
+				{ name: '整合', value: 7, old: 7 },
+				{ name: '范围', value: 6, old: 6 },
+				{ name: '进度', value: 6, old: 6 },
+				{ name: '成本', value: 4, old: 4 },
+				{ name: '质量', value: 3, old: 3 },
+				{ name: '资源', value: 6, old: 6 },
+				{ name: '沟通', value: 3, old: 3 },
+				{ name: '风险', value: 7, old: 7 },
+				{ name: '采购', value: 3, old: 3 },
+				{ name: '干系人', value: 4, old: 4 }
+			])
+			const getQueryString = (name) => {
+				var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			}
+			onMounted(() => {
+				// console.log(getQueryString('num'))
+			})
+			if (getQueryString('type')) {
+				list.value = list.value.sort(function () { return Math.random() - 0.5 })
+			}
+			if (getQueryString('num')) {
+				list.value = list.value.map(item=>{item.value = 10; return item})
+			}
+			const numSuccess = ref(false)
+			const check = () => {
+				numSuccess.value = !numSuccess.value
+			}
+			return {
+				list,
+				getQueryString,
+				numSuccess,
+				check
+			}
+		}
+	}
+	const app = createApp(App)
+	app.use(ElementPlus);
+	app.mount('#app')
+</script>
+
+</html>
