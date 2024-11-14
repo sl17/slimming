@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./v3/index.css">
+	<script src="./v3/v3.js"></script>
+	<script src="./v3/index.js"></script>
+	<title>vue3 + ElementPlus</title>
+	<style>
+		body,
+		html {}
+
+		* {
+			font-size: 12px;
+			color: #c18804;
+			box-sizing: border-box;
+		}
+
+		.item {
+			background-color: #d8d8d8;
+			margin-bottom: 5px;
+			color: #000;
+		}
+	</style>
+</head>
+<!-- 
+  注意不要使用但斜杠标签 
+    例如：<el-table-column prop="date" label="Date"/>
+    要写成： <el-table-column prop="date" label="Date"></el-table-column>
+ -->
+
+<body>
+	<div id="app">
+		<div class="container">
+			<div class="item" draggable="true" style="height: 30px;">1</div>
+			<div class="item" draggable="true">2</div>
+			<div class="item" draggable="true">3</div>
+			<div class="item" draggable="true">4</div>
+			<div class="item" draggable="true" style="height: 60px;">5</div>
+			<div class="item" draggable="true">6</div>
+			<div class="item" draggable="true" style="height: 70px;">7</div>
+			<div class="item" draggable="true">8</div>
+			<div class="item" draggable="true">9</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	const { createApp, ref, onMounted } = Vue
+	let App = {
+		setup() {
+
+			onMounted(() => {
+				// console.log(getQueryString('num'))
+			})
+			return {
+
+			}
+		}
+	}
+	const app = createApp(App)
+	app.use(ElementPlus);
+	app.mount('#app')
+</script>
+<script>
+	const container = document.querySelector('.container')
+	let sourceNode = null
+	container.ondragstart = (e) => {
+		// 延迟加上移动的 class 类
+		setTimeout(() => {
+			e.target.classList.add('move')
+		}, 0);
+		// 保存正在拖拽的 dom 元素
+		sourceNode = e.target.closest('.item')
+	}
+	container.ondragenter = (e) => {
+		e.preventDefault()
+		const currentNode = e.target.closest('.item')
+		if (e.target === container || currentNode === sourceNode) {
+			return
+		}
+
+		const children = Array.from(container.children)
+		const currentIndex = children.indexOf(currentNode)
+		const sourceIndex = children.indexOf(sourceNode)
+
+		// 保存初始的位置数据
+		children.forEach(child => {
+			child.rect = child.getBoundingClientRect()
+		})
+		// 通过判断索引来区分是 往上移动 还是向下移动
+		if (currentIndex > sourceIndex) {
+			container.insertBefore(currentNode, sourceNode)
+		} else {
+			container.insertBefore(sourceNode, currentNode)
+		}
+		// 获取结束后 item 的位置
+		children.forEach(child => {
+			const rect = child.getBoundingClientRect()
+
+			// 计算两个坐标位置差值
+			const diffLeft = child.rect.left - rect.left
+			const diffTop = child.rect.top - rect.top
+
+			// 趁浏览器还没来的及渲染，设置其位移距离
+			child.style.transform = `translate(${diffLeft}px, ${diffTop}px)`
+
+			// 执行动画
+			requestAnimationFrame(update)
+
+			const start = new Date().getTime()
+			function update() {
+				let time = (new Date().getTime() - start) / 300
+				time = Math.min(1, Math.max(0, time))
+
+				const l = diffLeft * (1 - time)
+				const t = diffTop * (1 - time)
+
+				child.style.transform = `translate(${l}px, ${t}px)`
+
+				if (time < 1) {
+					requestAnimationFrame(update)
+				} else {
+					child.style.transform = null
+				}
+			}
+		})
+	}
+</script>
+
+</html>
+<!--
+规划范围管理：为了记录如何定义、确认和控制项目范围和产品范围，创建项目范围计划
+收集需求：为了实现项目目标，确认、记录和管理干系人的需要和需求
+定义范围：
+
+
+-->
