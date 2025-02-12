@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./v3/index.css">
+  <script src="./v3/v3.js"></script>
+  <script src="./v3/index.js"></script>
+  <title>提醒</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    #app {
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    .optioner {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    select {
+      width: 100px;
+      height: 24px;
+      outline: none;
+      flex: 1;
+    }
+
+    select:not(:first-child) {
+      margin-left: 10px;
+    }
+
+    button {
+      padding: 0 10px;
+      margin-left: 10px;
+    }
+
+    .title {
+      font-size: 20px;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .wrap {
+      margin: 150px;
+      width: 200px;
+      height: 200px;
+      border-radius: 200px;
+      position: relative;
+      margin: 80px auto 0;
+    }
+
+    .wrap p {
+      width: 196px;
+      height: 196px;
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 200px;
+      background: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .wrap p span {
+      display: block;
+    }
+
+    .error {
+      box-shadow: 0 0 20px 0px red;
+      animation: move 1s linear infinite;
+    }
+
+    .wrap.error p {
+      /* font-size: 20px; */
+      color: #df0000;
+    }
+
+    @keyframes move {
+      0% {
+        box-shadow: 0 0 20px 0px red;
+      }
+
+      50% {
+        box-shadow: 0 0 60px 0px red;
+      }
+
+      100% {
+        box-shadow: 0 0 20px 0px red;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="title">倒计时</div>
+    <div class="optioner">
+      <select v-model="hours" title="选择时">
+        <option :value="i" v-for="(item,i) in 24" :key="'h'+i">{{i}}</option>
+      </select>&nbsp;时
+      <select v-model="minutes" title="选择分">
+        <option :value="j" v-for="(item,j) in 60" :key="'minu'+j">{{j}}</option>
+      </select>&nbsp;分
+      <select v-model="seconds" title="选择秒">
+        <option :value="item" v-for="(item,n) in 60" :key="'sec'+n">{{item}}</option>
+      </select>&nbsp;秒
+      <button :disabled="timeNum" @click="startFn">Start</button>
+    </div>
+    <div class="wrap" id="wrap">
+      <p @click="closeAu">{{str}}</p>
+    </div>
+  </div>
+</body>
+
+<script>
+  const { createApp, ref, reactive, onMounted } = Vue
+  let App = {
+    setup() {
+      const hours = ref(null) // 取值时
+      const minutes = ref(null) // 取值分
+      const seconds = ref(0) // 取值秒
+      let Timer = null // 定义计时器
+      const timeNum = ref(0) // 计算数字
+      const timeNumTump = ref(0) // 计算数字原始
+      let num = 0 // 进度
+      const str = ref('') // 显示时间
+      const startFn = () => {
+        closeAu()
+        timeNum.value = hours.value * 60 * 60 + minutes.value * 60 + seconds.value
+        if (timeNum.value <= 0) { return false }
+        timeNumTump.value = hours.value * 60 * 60 + minutes.value * 60 + seconds.value
+        countdown()
+        Timer = setInterval(() => {
+          timeNum.value--
+          countdown()
+        }, 1000)
+      }
+      // 倒计时判断逻辑
+      const countdown = () => {
+        num = 100 / timeNumTump.value * (timeNumTump.value - timeNum.value)
+        const wrap = document.getElementById('wrap');
+        wrap.style.background = `conic-gradient(from -0deg, #e9e9e9 0% ${num}%, #20ab04 ${num + 0.1}% 100%)`;
+        getTimeStr()
+        if (!timeNum.value) {
+          clearInterval(Timer)
+          au()
+          wrap.classList.add("error")
+          str.value = '到时间啦!'
+        }
+      }
+      // 获取显示出来的倒计时
+      const getTimeStr = () => {
+        const hoursStrTump = parseInt(timeNum.value / 3600)
+        const minutesStrTump = parseInt((timeNum.value - hoursStrTump * 3600) / 60)
+
+        const hoursStr = hoursStrTump < 10 ? '0' + hoursStrTump : hoursStrTump
+        const minutesStr = minutesStrTump < 10 ? '0' + minutesStrTump : minutesStrTump
+        const secondsStr = timeNum.value % 60 < 10 ? '0' + timeNum.value % 60 : timeNum.value % 60
+        str.value = hoursStr + ':' + minutesStr + ':' + secondsStr
+      }
+      const audioElement = document.createElement('audio')
+      const au = () => {
+        audioElement.src = './1.mp3';
+        audioElement.loop = true;
+        audioElement.autoplay = true;
+
+        // 将 audio 元素添加到 body 标签内（或页面中的其他位置）
+        document.body.appendChild(audioElement);
+
+        // 加载并开始播放音频
+        audioElement.load();
+        audioElement.play().then(function () {
+          console.log("音频开始播放");
+        }).catch(function (error) {
+          console.error("播放音频时出错: ", error);
+        });
+      }
+      const closeAu = () => {
+        if(!timeNum.value){
+          audioElement.pause()
+          const wrap = document.getElementById('wrap');
+          wrap.classList.remove("error")
+          str.value = '00:00:00'
+        }
+      }
+      onMounted(() => {
+      })
+      return {
+        hours,
+        minutes,
+        seconds,
+        timeNum,
+        str,
+        closeAu,
+        startFn
+      }
+    }
+  }
+  const app = createApp(App)
+  app.use(ElementPlus);
+  app.mount('#app')
+</script>
+
+</html>
