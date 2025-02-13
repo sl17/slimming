@@ -136,7 +136,7 @@
       const minutes = ref(null) // 取值分
       const seconds = ref(0) // 取值秒
       let Timer = null // 定义计时器
-      const timeNum = ref(0) // 计算数字
+      const timeNum = ref(null) // 计算数字
       const timeNumTump = ref(0) // 计算数字原始
       let num = 0 // 进度
       const str = ref('') // 显示时间
@@ -192,7 +192,7 @@
         });
       }
       const closeAu = () => {
-        if(!timeNum.value){
+        if(timeNum.value === 0){
           audioElement.pause()
           const wrap = document.getElementById('wrap');
           wrap.classList.remove("error")
