@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>subway price</title>
+  <style>
+    input {
+      height: 34px;
+      padding: 10px;
+      box-sizing: border-box;
+      outline: none;
+      width: 200px;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    p {
+      position: relative;
+      width: 200px;
+    }
+
+    button {
+      height: 34px;
+    }
+
+    p span {
+      font-size: 12px;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      color: #818181;
+      padding-left: 10px;
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <p>
+      <input type="number" id="time" value="">
+      <span>天数</span>
+    </p>
+    <p>
+      <input type="number" id="price" value="">
+      <span>单价</span>
+    </p>
+    <p>
+      <input type="number" id="month" value="1">
+      <span>月数</span>
+    </p>
+    <p>
+      <input type="number" id="people" value="1">
+      <span>人数</span>
+    </p>
+    <p>
+      <input type="text" id='n' disabled>
+      <span>结果</span>
+    </p>
+    <button onclick="calculation()">计算</button>
+  </div>
+  <script>
+    function calculation() {
+      let timeV = document.getElementById("time").value
+      let priceV = document.getElementById("price").value
+      let monthV = document.getElementById("month").value
+      let peopleV = document.getElementById("people").value
+      let nV = document.getElementById("n")
+      if (timeV && priceV) {
+        if (!monthV) { monthV = 1 }
+        if (!peopleV) { peopleV = 1 }
+        nV.value = day(timeV, priceV) * monthV * peopleV
+      } else {
+        alert('请输入天数和单价')
+      }
+    }
+
+    function day(time, price) {
+      // time：坐几天地铁
+      // price：每次地铁单价
+      // num： 每天坐两次 来回
+      const num = time * 2
+      let sum = 0
+      for (let index = 0; index < num; index++) {
+        let n = price
+        if (sum < 50) {
+          n = price * 0.9
+        } else if (sum >= 50 && sum < 100) {
+          n = price * 0.7
+        } else if (sum >= 100) {
+          n = price * 0.5
+        }
+        sum += n
+      }
+      return sum
+    }
+
+  </script>
+</body>
+
+</html>
