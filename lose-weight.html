@@ -459,7 +459,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 					const remark = document.querySelector('.remark')
 					if (obj[head.length]) {
 						remark.style.display = 'block'
-						// remark.innerHTML = `备注：${obj[obj.length-1]}`
 						remark.innerHTML = `<pre><code>备注：\n${obj[obj.length-1]}</code></pre>`
 					} else {
 						remark.style.display = 'none'
@@ -469,15 +468,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 				})
 			})
 		}
-		// let sss = ''
-		// for (let index = 14; index < 61; index++) {
-		//     sss+="${head["+index+"].split('、')[1]}：${obj["+index+"]}、"
-		// }
-		// console.log(sss);
 
 		function closeFn() {
 			const spanArr = document.querySelectorAll('.name-box span')
-			spanArr.forEach(span => span.classList.remove('col'));
+			// spanArr.forEach(span => span.classList.remove('col'));
 			dialog.style.display = 'none'
 		}
 
