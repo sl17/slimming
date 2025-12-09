@@ -368,12 +368,15 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 	</div>
 
 	<div class="upload">
-		<span><svg t="1765240520209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+		<span>
+			<svg t="1765240520209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
 				p-id="1867" width="128" height="128">
 				<path
 					d="M512 402.285714l146.285714 182.857143h-109.714285v256h-73.142858v-256h-109.714285l146.285714-182.857143z m0-256a256.036571 256.036571 0 0 1 254.171429 225.389715 237.750857 237.750857 0 0 1-44.507429 469.321142L713.142857 841.142857H658.285714v-73.142857h53.577143l7.241143-0.109714a164.571429 164.571429 0 0 0 38.436571-322.962286l-7.570285-1.938286-50.322286-11.446857-6.070857-51.2a182.893714 182.893714 0 0 0-361.947429-8.301714l-1.170285 8.265143-6.070858 51.2-50.285714 11.446857a164.571429 164.571429 0 0 0 29.037714 324.864L310.857143 768H365.714286v73.142857H310.857143a237.714286 237.714286 0 0 1-53.028572-469.504A256 256 0 0 1 512 146.285714z"
-					fill="#17abe3" p-id="1868"></path>
-			</svg></span>
+					fill="#17abe3" p-id="1868">
+				</path>
+			</svg>
+		</span>
 		<input type="file" id="excelFile" accept=".xlsx,.xls,.csv" />
 	</div>
 	<script>
@@ -422,12 +425,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 		let userID = ''
 		const dialog = document.querySelector('.dialog')
 		function setClick() {
-			const arr = JSON.parse(localStorage.getItem('data'))
 			const spanArr = document.querySelectorAll('.name-box span')
-			const newArr = arr.slice(1)
-			const head = arr.slice(0, 1)[0]
 			spanArr.forEach(item => {
 				item.addEventListener('click', function (e) {
+					const arr = JSON.parse(localStorage.getItem('data'))
+					const newArr = arr.slice(1)
+					const head = arr.slice(0, 1)[0]
 					// console.log('点击的span元素:', this);
 					// console.log('用户ID:', this.getAttribute('data-id'));
 					// console.log('文本内容:', this.textContent);
@@ -507,7 +510,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 			const remark = document.querySelector('.remark')
 			if (remarkBox.value) {
 				remark.style.display = 'block'
-				remark.innerHTML = `<pre><code>备注：${remarkBox.value}</code></pre>`
+				remark.innerHTML = `<pre><code>备注：\n${remarkBox.value}</code></pre>`
 			} else {
 				remark.style.display = 'none'
 			}
