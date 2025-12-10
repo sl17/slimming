@@ -399,6 +399,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 					defval: '', // 空单元格的默认值
 					raw: false // 使用格式化字符串
 				});
+				// 汉字按照26字母排序
+				const collator = new Intl.Collator('zh-CN')
+                jsonData.sort((a,b) => collator.compare(a[5], b[5]));
 
 				localStorage.setItem('data', JSON.stringify(jsonData))
 				// 处理数据...
@@ -542,3 +545,4 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 </body>
 
 </html>
+
