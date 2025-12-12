@@ -127,10 +127,7 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
   </style>
   <style>
     .upload {
-			position: fixed;
-			margin: auto;
-			bottom: 4vh;
-			right: 10vw;
+			position: relative;
 			width: 60px;
 			height: 60px;
 			border-radius: 50%;
@@ -291,7 +288,7 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
     }
     .user-info .btn-bottom button{
       margin-left: 20px;
-      padding: 0 20px;
+      padding: 0 10px;
     }
 
     .remark-box{
@@ -346,6 +343,61 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
       overflow: hidden;
       overflow-y: auto;
       height: 100%;
+    }
+
+
+    .copy {
+			position: relative;
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+      background-color: #47b1e3;
+		}
+    .copy span {
+			position: absolute;
+			margin: auto;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			width: 45px;
+			height: 45px;
+			background-color: #fff;
+			box-shadow: 0px 0px 6px 4px #fff;
+			border-radius: 50%;
+		}
+    .copy svg {
+      margin-top: 2px;
+			width: 47px;
+			height: 40px;
+			z-index: 9999;
+		}
+    .msg-box{
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .msg-box span {
+      background-color: rgba(0, 0, 0, .7);
+      border-radius: 10px;
+      padding: 10px 20px;
+      max-width: 60vw;
+      color: #fff;
+    }
+    .operation-box{
+      position: fixed;
+      bottom: 4vh;
+      right: 5vw;
+      display: flex;
+    }
+    .operation-box>div{
+      margin-right: 20px;
     }
   </style>
   <script>
@@ -403,6 +455,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           <pre><code>备注：<br>{{remarkValue}}</code></pre>
         </div>
         <div class="btn-bottom">
+          <van-button type="warning" size="small" @click="copyFn">复制</van-button>
           <van-button type="primary" size="small" @click="showRemarkDialog">备注</van-button>
           <van-button type="success" size="small" @click="calendarShow = true">标记</van-button>
           <van-button type="default" size="small" @click="userInfoVisible = false">关闭</van-button>
@@ -415,13 +468,29 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         <van-field
           v-model="remarkValue"
           label=""
-          placeholder=""
+          placeholder="备注"
           type="textarea"
           label-align="top"
         ></van-field>
         <div class="btn-bottom">
-          <van-button type="default" size="small">取消</van-button>
+          <van-button type="default" size="small" @click="remarkVisible=false;remarkValue=''">取消</van-button>
           <van-button type="primary" size="small" @click="hideRemarkDialog">确定</van-button>
+        </div>
+      </div>
+    </van-overlay>
+    <!-- 导入用户数据 -->
+    <van-overlay :show="selfDataVisible">
+      <div class="remark-box">
+        <van-field
+          v-model="selfData"
+          label=""
+          placeholder="个人数据"
+          type="textarea"
+          label-align="top"
+        ></van-field>
+        <div class="btn-bottom">
+          <van-button type="default" size="small" @click="selfDataVisible=false;selfData=''">取消</van-button>
+          <van-button type="primary" size="small" @click="hideselfDataDialog">确定</van-button>
         </div>
       </div>
     </van-overlay>
@@ -454,19 +523,32 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         </div>
       </div>
     </van-overlay>
-    <!-- 上传 -->
-    <div class="upload">
-      <span>
-        <svg t="1765240520209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          p-id="1867" width="128" height="128">
-          <path
-            d="M512 402.285714l146.285714 182.857143h-109.714285v256h-73.142858v-256h-109.714285l146.285714-182.857143z m0-256a256.036571 256.036571 0 0 1 254.171429 225.389715 237.750857 237.750857 0 0 1-44.507429 469.321142L713.142857 841.142857H658.285714v-73.142857h53.577143l7.241143-0.109714a164.571429 164.571429 0 0 0 38.436571-322.962286l-7.570285-1.938286-50.322286-11.446857-6.070857-51.2a182.893714 182.893714 0 0 0-361.947429-8.301714l-1.170285 8.265143-6.070858 51.2-50.285714 11.446857a164.571429 164.571429 0 0 0 29.037714 324.864L310.857143 768H365.714286v73.142857H310.857143a237.714286 237.714286 0 0 1-53.028572-469.504A256 256 0 0 1 512 146.285714z"
-            fill="#17abe3" p-id="1868">
-          </path>
-        </svg>
-      </span>
-      <input type="file" @change="uploadFn" accept=".xlsx,.xls,.csv" />
+    <div class="operation-box">
+      <!-- 上传 -->
+      <div class="upload">
+        <span>
+          <svg t="1765240520209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            p-id="1867" width="128" height="128">
+            <path
+              d="M512 402.285714l146.285714 182.857143h-109.714285v256h-73.142858v-256h-109.714285l146.285714-182.857143z m0-256a256.036571 256.036571 0 0 1 254.171429 225.389715 237.750857 237.750857 0 0 1-44.507429 469.321142L713.142857 841.142857H658.285714v-73.142857h53.577143l7.241143-0.109714a164.571429 164.571429 0 0 0 38.436571-322.962286l-7.570285-1.938286-50.322286-11.446857-6.070857-51.2a182.893714 182.893714 0 0 0-361.947429-8.301714l-1.170285 8.265143-6.070858 51.2-50.285714 11.446857a164.571429 164.571429 0 0 0 29.037714 324.864L310.857143 768H365.714286v73.142857H310.857143a237.714286 237.714286 0 0 1-53.028572-469.504A256 256 0 0 1 512 146.285714z"
+              fill="#17abe3" p-id="1868">
+            </path>
+          </svg>
+        </span>
+        <input type="file" @change="uploadFn" accept=".xlsx,.xls,.csv" />
+      </div>
+      <!-- 复制 -->
+      <div class="copy" @click="importData">
+        <span>
+          <svg t="1765524480970" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11001" width="64" height="64"><path d="M828.2 146c-19.1-17-45.5-32-78.6-44.5C685.6 77.3 601.2 64 512 64s-173.6 13.3-237.6 37.5C241.3 114 214.9 129 195.8 146c-29.6 26.5-35.8 53.2-35.8 71v379c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-90.8c14.5 8.8 31.3 16.8 50.4 24 64 24.2 148.3 37.5 237.6 37.5s173.6-13.3 237.6-37.5c19-7.2 35.9-15.3 50.4-24v105.2c0 13.9-22.6 36.5-73 55.6-55 20.8-128.3 32.6-207 33.3-4.4 0-7.9 3.6-7.9 8v48.1c0.1 4.4 3.7 8 8.1 7.9 86.2-0.8 167.5-14 229.5-37.5 17.5-6.5 34.3-14.5 50.4-24V807c0 13.9-22.5 36.5-73 55.6-55 20.8-128.3 32.6-207 33.3-4.4 0-7.9 3.6-7.9 8V952c0.1 4.4 3.7 8 8.1 7.9 86.2-0.8 167.5-14 229.5-37.5 33.1-12.5 59.5-27.5 78.6-44.5 29.6-26.5 35.8-53.2 35.8-71V217c-0.2-17.8-6.4-44.5-36-71zM800 413.7v0.8c-0.8 14-23.5 36.1-73 54.8-57 21.5-133.3 33.4-215 33.4s-158-11.8-215-33.4c-50.4-19.1-73-41.7-73-55.6V308.5c14.5 8.8 31.3 16.8 50.4 24 64 24.2 148.3 37.5 237.6 37.5s173.6-13.3 237.6-37.5c19.1-7.2 35.9-15.3 50.4-24v105.2z m-73-141.1C670 294.1 593.7 306 512 306s-158-11.9-215-33.4c-50.4-19.1-73-41.7-73-55.6s22.5-36.5 73-55.6c57-21.5 133.3-33.4 215-33.4s158 11.8 215 33.4c50.4 19.1 73 41.7 73 55.6s-22.5 36.5-73 55.6z" fill="#1296db" p-id="11002"></path><path d="M472.5 773L287.4 619.3c-3.4-2.8-8.4-2.4-11.3 1-1.2 1.4-1.8 3.2-1.8 5.1v48.2c0 4.8 2.1 9.3 5.8 12.3l86.1 71.5H112.4c-4.4 0-8 3.6-8 8v40c0 4.4 3.6 8 8 8h250.8l-82.9 66.5c-3.8 3-6 7.6-6 12.5v47.4c0 4.4 3.6 8 8 8 1.8 0 3.6-0.6 5-1.8l185-148.3c6.9-5.5 8-15.6 2.5-22.5-0.7-0.8-1.5-1.6-2.3-2.2z" fill="#1296db" p-id="11003"></path></svg>  
+        </span>
+      </div>
     </div>
+    <div class="msg-box" v-if="messageVisible">
+      <span>{{message}}</span>
+    </div>
+    <!-- 占位 -->
+    <div style="height: calc(4vh + 80px);width: 100%;"></div>
   </div>
 </body>
 
@@ -699,6 +781,34 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       const hideCalendarSet = () => {
         calendarSetShow.value = false
       }
+      //个人数据
+      const message = ref('')
+      const messageVisible = ref(false)
+      const copyFn = () => {
+        try {
+          navigator.clipboard.writeText(localStorage.getItem('self'))
+          message.value = '复制成功！'
+          messageVisible.value = true
+        } catch (err) {
+          console.log(err)
+          message.value = '很遗憾，你的手机不支持复制！'
+          messageVisible.value = true
+        }
+        setInterval(() => {
+          messageVisible.value = false
+        }, 1000)
+      }
+      const selfDataVisible = ref(false)
+      const selfData = ref('')
+      const hideselfDataDialog = () => {
+        selfDataVisible.value = false
+        localStorage.setItem('self', selfData.value)
+        selfData.value = ''
+        location.reload()
+      }
+      const importData = () => {
+        selfDataVisible.value = true
+      }
 
       return {
         // excel上传解析
@@ -728,7 +838,14 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         riceList,
         dateSub,
         dateAdd,
-        hideCalendarSet
+        hideCalendarSet,
+        copyFn,
+        message,
+        messageVisible,
+        selfDataVisible,
+        selfData,
+        importData,
+        hideselfDataDialog
       }
     }
   }
