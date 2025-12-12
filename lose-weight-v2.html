@@ -103,11 +103,12 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      flex-wrap: wrap;
     }
 
     .calendar-set-box .van-checkbox-group .van-checkbox {
       font-size: 16px;
-      height: 6vh;
+      height: 7vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -263,17 +264,16 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
     .user-info .center {
       flex: 1;
       padding: 10px 15px 10px 20px;
-			border-bottom: 1px solid #bbb;
+      border-top: 10px solid #fff;
+      border-bottom: 10px solid #fff;
+      box-shadow: 0 0 1px 1px #bbb;
       overflow: hidden;
-		}
-    .user-info .center .center-box {
-      height: 100%;
-			display: flex;
+      display: flex;
 			flex-wrap: wrap;
 			justify-content: flex-start;
-      overflow: hidden;
 			overflow-y: auto;
-    }
+      -webkit-overflow-scrolling: touch
+		}
 
 		.user-info .center span {
 			margin-right: 15px;
@@ -394,12 +394,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           <span class="bmi-tag">BMI：{{BMI}}</span>
         </div>
         <div class="center">
-          <div class="center-box">
-            <template v-for="(item,i) in IDList" >
-              <span  class='level4' :key="'c'+i" v-if="i == 33 || i == 34 || i==35">{{headList[i]+':'+item}}</span>
-              <span :key="'d'+i" v-else-if="i>13&&headList[i]">{{headList[i]+':'+item}}</span>
-            </template>
-          </div>
+          <template v-for="(item,i) in IDList" >
+            <span  class='level4' :key="'c'+i" v-if="i == 33 || i == 34 || i==35">{{headList[i]+':'+item}}</span>
+            <span :key="'d'+i" v-else-if="i>13&&headList[i]">{{headList[i]+':'+item}}</span>
+          </template>
         </div>
         <div class="remark">
           <pre><code>备注：<br>{{remarkValue}}</code></pre>
@@ -431,7 +429,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     <!-- 日历弹窗 -->
     <van-overlay :show="calendarShow">
       <div class="dialog-calendar-box">
-        <van-icon name="cross"  @click="calendarShow = false"></van-icon>
+        <van-icon name="cross" @click="calendarShow = false"></van-icon>
         <van-calendar :min-date="oneMonthAgo" :max-date="oneMonthLater" :show-title="false" :formatter="formatter"
           :poppable="false" :show-confirm="false" :style="{ height: '88vh' }"
           @confirm="onConfirm"></van-calendar>
@@ -478,7 +476,32 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     setup() {
       onMounted(() => {
         setName()
+        // 同步旧数据的备注
+        setRemark()
       })
+      // 同步旧数据的备注
+      const setRemark = () => {
+        const data = (JSON.parse(localStorage.getItem('data'))) || []
+        if(data && data.length) {
+          userList.value = data.slice(1)
+          headList.value = data.slice(0, 1)[0].map(item => item.split('、')[1])
+          userDetail.value = (JSON.parse(localStorage.getItem('self'))) || {}
+          userList.value.forEach(item => {
+            if (item[headList.value.length]) {
+              if (userDetail.value[item[1]]) {
+                userDetail.value[item[1]]['remark'] = item[item.length-1]?item[item.length-1]:''
+              }else {
+                userDetail.value[item[1]] = {}
+                userDetail.value[item[1]]['remark'] = item[item.length-1]?item[item.length-1]:''
+              }
+              item.pop()
+            }
+          })
+          localStorage.setItem('data', JSON.stringify(data))
+          localStorage.setItem('self', JSON.stringify(userDetail.value))
+        }
+      }
+
       const userDetail = ref({}) // 用户信息存储
       // -------------------------上传excel-----------------------------
       const userList = ref([])
@@ -536,22 +559,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         userDetail.value = JSON.parse(localStorage.getItem('self')) || {}
         if(userDetail.value&&userDetail.value[id]) {
           remarkValue.value = userDetail.value[id].remark
+        } else {
+          remarkValue.value = ''
         }
       }
       const calcBMI = (num) => {
         let str = ''
         if (num < 18.5) {
           str = '过轻'
-        } else if (num > 18.5 && num < 24.9) {
+        } else if (num > 18.5 && num < 23.9) {
           str = '正常'
-        } else if (num > 24.9 && num < 29.9) {
+        } else if (num > 23.9 && num < 27.9) {
           str = '超重'
-        } else if (num > 29.9 && num < 34.9) {
-          str = '中度'
-        } else if (num > 34.9 && num < 39.9) {
-          str = '严重'
-        } else {
-          str = '极端'
+        } else if (num > 27.9 ) {
+          str = '肥胖'
         }
         return str
       }
@@ -579,6 +600,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         { text: '早餐', value: '1' },
         { text: '中餐', value: '2' },
         { text: '晚餐', value: '3' },
+        { text: '复盘', value: '4' },
+        { text: '运动', value: '5' },
       ];
       const today = new Date();
 
@@ -595,6 +618,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       const formatter = (day) => {
         const dateStr = dateFormat(day.date)
         day.topInfo = ''
+        day.bottomInfo = ''
         const obj = userDetail.value[userID.value]||{checkRice:{}}
         
         for (const key in obj.checkRice) {
@@ -602,11 +626,17 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           const oo = {
             1: '早',
             2: '中',
-            3: '晚'
+            3: '晚',
+            4: '盘',
+            5: '动'
           }
           if (key === dateStr && arr && arr.length) {
             arr.forEach(item => {
-              day.topInfo += oo[item]?oo[item]:''
+              if (item < 4) {
+                day.topInfo += oo[item]?oo[item]:''
+              } else {
+                day.bottomInfo += oo[item]?oo[item]:''
+              }
             });
           }
         }
