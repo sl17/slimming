@@ -775,6 +775,15 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           vant.showFailToast('很遗憾，你的手机不支持复制！');
         }
       }
+      const isJSONObject = (str) => {
+          try {
+            const parsed = JSON.parse((str));
+            return parsed !== null && typeof parsed === 'object';
+          } catch (error) {
+            vant.showFailToast('数据格式错误！');
+            return false;
+          }
+      }
       const selfDataVisible = ref(false)
       const selfData = ref('')
       // 隐藏个人数据导入弹窗
@@ -784,10 +793,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             title: '提示',
             message: '确认后，导入数据将覆盖本地数据，确定操作吗？',
           }).then(() => {
-            selfDataVisible.value = false
-            localStorage.setItem('self', selfData.value)
-            selfData.value = ''
-            location.reload()
+            if (isJSONObject(selfData.value)) {
+              selfDataVisible.value = false
+              localStorage.setItem('self', selfData.value)
+              selfData.value = ''
+              location.reload()
+            }
           }).catch(()=>{
             
           })
