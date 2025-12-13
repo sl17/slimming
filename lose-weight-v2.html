@@ -351,7 +351,7 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
 			width: 60px;
 			height: 60px;
 			border-radius: 50%;
-      background-color: #47b1e3;
+      background-color: #4ec6ff;
 		}
     .copy span {
 			position: absolute;
@@ -372,24 +372,7 @@ var Vue=function(e){"use strict";function t(e){const t=Object.create(null);for(c
 			height: 40px;
 			z-index: 9999;
 		}
-    .msg-box{
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      left: 0;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-    .msg-box span {
-      background-color: rgba(0, 0, 0, .7);
-      border-radius: 10px;
-      padding: 10px 20px;
-      max-width: 60vw;
-      color: #fff;
-    }
+    
     .operation-box{
       position: fixed;
       bottom: 4vh;
@@ -473,7 +456,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           label-align="top"
         ></van-field>
         <div class="btn-bottom">
-          <van-button type="default" size="small" @click="remarkVisible=false;remarkValue=''">取消</van-button>
+          <van-button type="default" size="small" @click="remarkVisible=false;">取消</van-button>
           <van-button type="primary" size="small" @click="hideRemarkDialog">确定</van-button>
         </div>
       </div>
@@ -543,9 +526,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           <svg t="1765524480970" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11001" width="64" height="64"><path d="M828.2 146c-19.1-17-45.5-32-78.6-44.5C685.6 77.3 601.2 64 512 64s-173.6 13.3-237.6 37.5C241.3 114 214.9 129 195.8 146c-29.6 26.5-35.8 53.2-35.8 71v379c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-90.8c14.5 8.8 31.3 16.8 50.4 24 64 24.2 148.3 37.5 237.6 37.5s173.6-13.3 237.6-37.5c19-7.2 35.9-15.3 50.4-24v105.2c0 13.9-22.6 36.5-73 55.6-55 20.8-128.3 32.6-207 33.3-4.4 0-7.9 3.6-7.9 8v48.1c0.1 4.4 3.7 8 8.1 7.9 86.2-0.8 167.5-14 229.5-37.5 17.5-6.5 34.3-14.5 50.4-24V807c0 13.9-22.5 36.5-73 55.6-55 20.8-128.3 32.6-207 33.3-4.4 0-7.9 3.6-7.9 8V952c0.1 4.4 3.7 8 8.1 7.9 86.2-0.8 167.5-14 229.5-37.5 33.1-12.5 59.5-27.5 78.6-44.5 29.6-26.5 35.8-53.2 35.8-71V217c-0.2-17.8-6.4-44.5-36-71zM800 413.7v0.8c-0.8 14-23.5 36.1-73 54.8-57 21.5-133.3 33.4-215 33.4s-158-11.8-215-33.4c-50.4-19.1-73-41.7-73-55.6V308.5c14.5 8.8 31.3 16.8 50.4 24 64 24.2 148.3 37.5 237.6 37.5s173.6-13.3 237.6-37.5c19.1-7.2 35.9-15.3 50.4-24v105.2z m-73-141.1C670 294.1 593.7 306 512 306s-158-11.9-215-33.4c-50.4-19.1-73-41.7-73-55.6s22.5-36.5 73-55.6c57-21.5 133.3-33.4 215-33.4s158 11.8 215 33.4c50.4 19.1 73 41.7 73 55.6s-22.5 36.5-73 55.6z" fill="#1296db" p-id="11002"></path><path d="M472.5 773L287.4 619.3c-3.4-2.8-8.4-2.4-11.3 1-1.2 1.4-1.8 3.2-1.8 5.1v48.2c0 4.8 2.1 9.3 5.8 12.3l86.1 71.5H112.4c-4.4 0-8 3.6-8 8v40c0 4.4 3.6 8 8 8h250.8l-82.9 66.5c-3.8 3-6 7.6-6 12.5v47.4c0 4.4 3.6 8 8 8 1.8 0 3.6-0.6 5-1.8l185-148.3c6.9-5.5 8-15.6 2.5-22.5-0.7-0.8-1.5-1.6-2.3-2.2z" fill="#1296db" p-id="11003"></path></svg>  
         </span>
       </div>
-    </div>
-    <div class="msg-box" v-if="messageVisible">
-      <span>{{message}}</span>
     </div>
     <!-- 占位 -->
     <div style="height: calc(4vh + 80px);width: 100%;"></div>
@@ -664,14 +644,18 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         remarkVisible.value = true
       }
       const hideRemarkDialog = () => {
-        if(!userDetail.value[userID.value]) {
-          userDetail.value[userID.value] = {}
-          userDetail.value[userID.value]['remark'] = remarkValue.value
+        if(remarkValue.value.trim()) {
+          if(!userDetail.value[userID.value]) {
+            userDetail.value[userID.value] = {}
+            userDetail.value[userID.value]['remark'] = remarkValue.value
+          } else {
+            userDetail.value[userID.value]['remark'] = remarkValue.value
+          }
+          localStorage.setItem('self', JSON.stringify(userDetail.value))
+          remarkVisible.value = false
         } else {
-          userDetail.value[userID.value]['remark'] = remarkValue.value
+          vant.showToast('请先输入备注！');
         }
-        localStorage.setItem('self', JSON.stringify(userDetail.value))
-        remarkVisible.value = false
       }
       
       //  -----------------------日历相关-----------------------------------
@@ -782,29 +766,34 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         calendarSetShow.value = false
       }
       //个人数据
-      const message = ref('')
-      const messageVisible = ref(false)
       const copyFn = () => {
         try {
           navigator.clipboard.writeText(localStorage.getItem('self'))
-          message.value = '复制成功！'
-          messageVisible.value = true
+          vant.showSuccessToast('复制成功！');
         } catch (err) {
           console.log(err)
-          message.value = '很遗憾，你的手机不支持复制！'
-          messageVisible.value = true
+          vant.showFailToast('很遗憾，你的手机不支持复制！');
         }
-        setInterval(() => {
-          messageVisible.value = false
-        }, 1000)
       }
       const selfDataVisible = ref(false)
       const selfData = ref('')
+      // 隐藏个人数据导入弹窗
       const hideselfDataDialog = () => {
-        selfDataVisible.value = false
-        localStorage.setItem('self', selfData.value)
-        selfData.value = ''
-        location.reload()
+        if (selfData.value.trim()) {
+          vant.showConfirmDialog({
+            title: '提示',
+            message: '确认后，导入数据将覆盖本地数据，确定操作吗？',
+          }).then(() => {
+            selfDataVisible.value = false
+            localStorage.setItem('self', selfData.value)
+            selfData.value = ''
+            location.reload()
+          }).catch(()=>{
+            
+          })
+        } else {
+          vant.showToast('个人数据不能为空！');
+        }
       }
       const importData = () => {
         selfDataVisible.value = true
@@ -840,8 +829,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         dateAdd,
         hideCalendarSet,
         copyFn,
-        message,
-        messageVisible,
         selfDataVisible,
         selfData,
         importData,
