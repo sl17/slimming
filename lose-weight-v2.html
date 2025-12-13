@@ -440,7 +440,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         <div class="btn-bottom">
           <van-button type="warning" size="small" @click="copyFn">复制</van-button>
           <van-button type="primary" size="small" @click="showRemarkDialog">备注</van-button>
-          <van-button type="success" size="small" @click="calendarShow = true">标记</van-button>
+          <van-button type="success" size="small" @click="calendarShow = true;riceVal=[]">标记</van-button>
           <van-button type="default" size="small" @click="userInfoVisible = false">关闭</van-button>
         </div>
       </div>
@@ -486,7 +486,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
           :poppable="false" :show-confirm="false" :style="{ height: '88vh' }"
           @confirm="onConfirm"></van-calendar>
         <div class="btn-bottom">
-          <van-button type="default" size="small" @click="calendarShow = false">关闭</van-button>
+          <van-button type="default" size="small" @click="calendarShow = false;">关闭</van-button>
         </div>
       </div>
     </van-overlay>
