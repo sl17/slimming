@@ -434,7 +434,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       <van-button round v-for="item in userList" :key="item[1]" :plain="true" @click="showCalendarSetFN(item[1])" type="primary" size="small"> {{item[5]}} </van-button>
     </div>
     <!-- 用户详情 -->
-    <van-overlay :show="userInfoVisible">
+    <van-overlay :show="userInfoVisible" :lock-scroll="false">
       <div class="user-info">
         <van-icon name="cross"  @click="userInfoVisible = false"></van-icon>
         <p class="user-name">{{IDList[5]}}</p>
@@ -496,7 +496,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     </van-overlay>
 
     <!-- 日历弹窗 -->
-    <van-overlay :show="calendarShow">
+    <van-overlay :show="calendarShow" :lock-scroll="false">
       <div class="dialog-calendar-box">
         <van-icon name="cross" @click="calendarShow = false"></van-icon>
         <van-calendar :min-date="oneMonthAgo" :max-date="oneMonthLater" :show-title="false" :formatter="formatter"
