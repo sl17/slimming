@@ -446,7 +446,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       </div>
     </van-overlay>
     <!-- 设置备注 -->
-    <van-overlay :show="remarkVisible">
+    <van-overlay :show="remarkVisible" :lock-scroll="false">
       <div class="remark-box">
         <van-field
           v-model="remarkValue"
@@ -462,7 +462,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       </div>
     </van-overlay>
     <!-- 导入用户数据 -->
-    <van-overlay :show="selfDataVisible">
+    <van-overlay :show="selfDataVisible" :lock-scroll="false">
       <div class="remark-box">
         <van-field
           v-model="selfData"
